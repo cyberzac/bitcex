@@ -9,11 +9,9 @@ import org.bitcex.MtGoxTicker
 class MtGoxTickerActor extends Actor with Producer {
   val log = LoggerFactory.getLogger(getClass)
 
-  val uri = "https://mtgox.com/code/data/ticker.php/?delay=20000"
+  def endpointUri = "https://mtgox.com/code/data/ticker.php"
 
-  def endpointUri = uri
-
-  log.info("MtGox actor started {}", uri)
+  log.info("MtGox actor started {}", endpointUri)
 
   override protected def receiveAfterProduce = {
     case msg: Message => {

@@ -2,14 +2,14 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output indent="yes" encoding="UTF-8"/>
     <xsl:strip-space elements="*"/>
-    
-    <xsl:template match="/*:Envelope">      
-            <xsl:apply-templates/>       
+
+    <xsl:template match="*:Envelope">
+            <xsl:apply-templates/>
     </xsl:template>
-    
+
     <xsl:template match="*:subject"/>
     <xsl:template match="*:Sender"/>
-    
+
     <xsl:template match="*:Cube[@time]">
         <ecb>
             <xsl:attribute name="timestamp">

@@ -1,29 +1,36 @@
 package org.bitcex.camel
 
 import akka.actor.Actor
-import akka.camel.{Message, Producer}
 import org.slf4j.LoggerFactory
+import akka.camel.{Consumer, Message}
+import java.io.InputStream
+import xml.{Elem, XML}
+import org.bitcex._
+import org.joda.time.DateMidnight
 
-class EcbCurrencyActor extends Actor with Producer {
+class EcbCurrencyActor extends Actor with Consumer {
     val log = LoggerFactory.getLogger(getClass)
 
-  val uri = " http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
 
-  def endpointUri = uri
+  log.info("EcbCurrency actor started {}")
 
-  log.info("EcbCurrency actor started {}", uri)
+  def endpointUri = "seda:ecbCurrency"
 
 
-  override protected def receiveBeforeProduce = {
-
+  def updateRates(ecbupdate: Elem): Receive = {
+    case ticker : MtGoxTicker =>
   }
 
-  override protected def receiveAfterProduce = {
+  def receive = {
+    case msg: Message => {
+      log.info("Received {}", msg.bodyAs[String])
+      val update = XML.load(msg.bodyAs[InputStream])
+      val ts = new DateMidnight(update \ "@timestamp")
 
-    case msg:Message => {
-      val body = msg.bodyAs[String]
-       log.info("Received raw: {}", body)
-
+      become(updateRates(update))
     }
+
+    case msg => log.info("WTF {}",  msg)
   }
+
 }

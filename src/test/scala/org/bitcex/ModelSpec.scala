@@ -26,6 +26,11 @@ class ModelSpec extends Specification {
     "Have a + method" in {
       SEK(5) + SEK(1) must_== SEK(6)
     }
+   /* TODO add string parseing
+    "Convert a string to SEK" in {
+      SEK("5") must_==  SEK(5)
+    }
+    */
   }
 
   "SellOrder" should {
@@ -36,16 +41,16 @@ class ModelSpec extends Specification {
 
   "A CurrencyConverter[SEK,USD]" should {
     val convertUSD_SEK = CurrencyConverter(USD(1), SEK(6.5), spread = 0.02)
-    "I buy USD for SEK" in {
+    "Buy USD for SEK" in {
       convertUSD_SEK.ask(USD(2)) must_== SEK(12.74)
     }
-    "I sell USD for SEK" in {
+    "Sell USD for SEK" in {
       convertUSD_SEK.bid(USD(2)) must_== SEK(13.26)
     }
-    "I sell SEK for USD" in {
+    "Sell SEK for USD" in {
       convertUSD_SEK.inverseBid(SEK(12.74)) must_== USD(2)
     }
-    "I buy SEK for USD" in {
+    "Buy SEK for USD" in {
       convertUSD_SEK.inverseAsk(SEK(13.26)) must_== USD(2)
     }
 

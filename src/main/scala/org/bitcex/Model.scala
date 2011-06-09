@@ -1,11 +1,5 @@
 package org.bitcex
 
-/*
-trait  Currency {
-  def >(bd:BigDecimal) = amount > bd
-  def -= (bd:BigDecimal) = copy(amount - bd)
-}
-*/
 
 sealed abstract class Fund[T] {
   val amount: BigDecimal
@@ -40,7 +34,7 @@ case class BTC(amount: BigDecimal) extends Fund[BTC] {
 }
 
 
-case class CurrencyConverter[F <: Fund[F], T <: Fund[T]](val from: F, val to: T, spread: Double = 0.02) {
+case class CurrencyConverter[F <: Fund[F], T <: Fund[T]](from: F, to: T, spread: Double = 0.02) {
   val rate = to.amount / from.amount
   val bidRate = rate * (1 + spread)
   val askRate = rate * (1 - spread)
