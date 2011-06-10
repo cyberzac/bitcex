@@ -26,11 +26,7 @@ class ModelSpec extends Specification {
     "Have a + method" in {
       SEK(5) + SEK(1) must_== SEK(6)
     }
-   /* TODO add string parseing
-    "Convert a string to SEK" in {
-      SEK("5") must_==  SEK(5)
-    }
-    */
+
   }
 
   "SellOrder" should {
@@ -54,9 +50,8 @@ class ModelSpec extends Specification {
       convertUSD_SEK.inverseAsk(SEK(13.26)) must_== USD(2)
     }
 
-
-    "Convert from SEK to USD" in {
-      convertUSD_SEK.midpoint(SEK(26)) must_== USD(4)
+    "Have a midpoint rate" in {
+      convertUSD_SEK.midpoint(USD(1)) must_== SEK(6.5)
     }
   }
 

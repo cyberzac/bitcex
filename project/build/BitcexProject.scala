@@ -17,7 +17,11 @@ class BitcexProject(info: ProjectInfo) extends DefaultWebProject(info) with Akka
   // val sjson ="net.debasishg" % "sjson_2.9.0" % "0.12"
 
 //  val saxon = "net.sf.saxon" % "saxonhe" % "9.2.0_3j"
-  val saxon = "net.sourceforge.saxon" % "saxon" % "9.1.0.8"
+//  val saxon = "net.sourceforge.saxon" % "saxon" % "9.1.0.8"
+
+  val saxon_version = "9.1.0.8j"
+  val saxon =  "saxon" % "saxon" % saxon_version
+  val saxon_dom = "saxon" % "saxon-dom" % saxon_version
 
   val specs = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.7" % "test"
   val scalaTest = "org.scalatest" % "scalatest" % "1.2" % "test"

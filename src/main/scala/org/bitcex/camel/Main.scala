@@ -6,7 +6,7 @@ import akka.camel.CamelServiceManager._
 import org.slf4j.LoggerFactory
 import akka.camel.CamelContextManager
 import org.apache.camel.scala.dsl.builder.RouteBuilder
-import org.apache.camel.scala.Period
+import org.apache.camel.scala.{Frequency, Period}
 
 object Main {
 
@@ -17,15 +17,14 @@ object Main {
     log.info("Starting bitcex")
 
     val buyerActor = actorOf[BuyActor]
-    val mtGoxActor = actorOf[MtGoxTickerActor]
-    val ecbActor = actorOf[EcbCurrencyActor]
-    val ecbActorEndpoint = "actor:uuid:%s" format ecbActor.uuid
+    val bitcexActor = actorOf[BitcexActor]
+    val mtGoxActor = actorOf(new MtGoxTickerActor(bitcexActor))
 
     startCamelService
     CamelContextManager.init()
     val context = CamelContextManager.context.get
     context.addRoutes(new RouteBuilder {
-      "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml".delay(new Period(30000)) --> "xslt:///ecb.xsl" -->  "seda:ecbCurrency"
+      "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml".throttle(new Frequency(1, new Period(5*60*1000))) --> "xslt:///ecb.xsl" -->  "seda:ecbCurrency"
     })
     CamelContextManager start
 
@@ -33,7 +32,7 @@ object Main {
 
     buyerActor.start()
     mtGoxActor.start()
-    ecbActor.start()
+    bitcexActor.start()
 
     val template = CamelContextManager.mandatoryTemplate
     val response = template.requestBody("https://mtgox.com/code/data/ticker.php/", "")

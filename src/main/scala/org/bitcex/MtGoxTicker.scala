@@ -21,4 +21,11 @@ object MtGoxTicker {
   def extractUSD(field:String, json:JValue) : USD = USD(extractBigDecimal(field, json))
 }
 
-  case class MtGoxTicker(high: USD, low: USD, vol: BigDecimal, buy: USD, sell: USD, last: USD)
+  case class MtGoxTicker(high: USD, low: USD, vol: BigDecimal, bid: USD, ask: USD, last: USD) {
+    def toTicker[T <:Fund[T]](converter:CurrencyConverter[USD, T]): Ticker[T] = {
+      val lastSEK = converter.midpoint(last)
+      val askSEK = converter.bid(ask)
+      val bidSEK = converter.ask(bid)
+      Ticker(ask=askSEK, last=lastSEK, bid=bidSEK)
+    }
+  }

@@ -1,6 +1,5 @@
 package org.bitcex
 
-
 sealed abstract class Fund[T] {
   val amount: BigDecimal
 
@@ -33,7 +32,6 @@ case class BTC(amount: BigDecimal) extends Fund[BTC] {
   def create(amount: BigDecimal) = copy(amount)
 }
 
-
 case class CurrencyConverter[F <: Fund[F], T <: Fund[T]](from: F, to: T, spread: Double = 0.02) {
   val rate = to.amount / from.amount
   val bidRate = rate * (1 + spread)
@@ -47,9 +45,10 @@ case class CurrencyConverter[F <: Fund[F], T <: Fund[T]](from: F, to: T, spread:
 
   def inverseAsk(to: T): F = from.create(to.amount / bidRate)
 
-  def midpoint(to: T): F = from.create(to.amount / rate)
+  def midpoint(from: F): T = to.create(from.amount *rate)
 }
 
+case class Ticker[T <:Fund[T]] (ask:T, last:T, bid:T)
 
 abstract class Order[T, S] {
   val amount: Fund[T]
