@@ -22,10 +22,11 @@ object MtGoxTicker {
 }
 
   case class MtGoxTicker(high: USD, low: USD, vol: BigDecimal, bid: USD, ask: USD, last: USD) {
-    def toTicker[T <:Fund[T]](converter:CurrencyConverter[USD, T]): Ticker[T] = {
+    def toTicker[T <:Fund[T]](converterOption:Option[CurrencyConverter[USD, T]]): Option[Ticker[T]] = {
+      val converter = converterOption.getOrElse(return None)
       val lastSEK = converter.midpoint(last)
       val askSEK = converter.bid(ask)
       val bidSEK = converter.ask(bid)
-      Ticker(ask=askSEK, last=lastSEK, bid=bidSEK)
+      Some(Ticker(ask=askSEK, last=lastSEK, bid=bidSEK))
     }
   }

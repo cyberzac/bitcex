@@ -28,7 +28,7 @@ class BitcexProject(info: ProjectInfo) extends DefaultWebProject(info) with Akka
   val jetty7 = "org.eclipse.jetty" % "jetty-webapp" % "7.0.2.RC0" % "test"
 
   val camel_version = "2.7.1"
-  val camel_core = "org.apache.camel" % "camel-core" % camel_version withSources ()
+  val camel_core = "org.apache.camel" % "camel-core" % camel_version withSources () withJavadoc()
   val camel_scala = "org.apache.camel" % "camel-scala" % camel_version withSources ()
   val camel_servlet = "org.apache.camel" % "camel-servlet" % camel_version
   val camel_spring = "org.apache.camel" % "camel-spring" % camel_version withSources ()

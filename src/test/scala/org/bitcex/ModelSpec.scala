@@ -31,7 +31,7 @@ class ModelSpec extends Specification {
 
   "SellOrder" should {
     "Have a total" in {
-      SellOrderSEK(BTC(10), SEK(5)).total must_== SEK(50)
+      AskOrderSEK(BTC(10), SEK(5)).total must_== SEK(50)
     }
   }
 

@@ -17,32 +17,34 @@ object Main {
     log.info("Starting bitcex")
 
     val buyerActor = actorOf[BuyActor]
-    val bitcexActor = actorOf[BitcexActor]
-    val mtGoxActor = actorOf(new MtGoxTickerActor(bitcexActor))
+    val tickerActor = actorOf[TickerActor]
+    val velocityActor = actorOf[VelocityActor]
+    val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))
+    val mtGoxActor = actorOf(new MtGoxTickerActor(tickerActor))
+    val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor))
 
     startCamelService
     CamelContextManager.init()
     val context = CamelContextManager.context.get
-    context.addRoutes(new RouteBuilder {
-      "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml".throttle(new Frequency(1, new Period(5*60*1000))) --> "xslt:///ecb.xsl" -->  "seda:ecbCurrency"
-    })
+    context.addRoutes(BitcexRouteBuilder)
     CamelContextManager start
 
-    //val currency = actorOf[GoogleCurrencyActor]
-
     buyerActor.start()
+    tickerActor.start()
+    velocityActor.start()
+    indexActor.start()
     mtGoxActor.start()
-    bitcexActor.start()
-
+    ecbCurrencyActor.start()
+         /*
     val template = CamelContextManager.mandatoryTemplate
     val response = template.requestBody("https://mtgox.com/code/data/ticker.php/", "")
     log.info("Response was : {}", response)
-
+       */
     while(true) {
 //      val ticker = CamelContextManager.mandatoryTemplate.requestBody("https://mtgox.com/code/data/ticker.php")// mtGox !! null
-      val ticker = mtGoxActor !! null
-      log.info(". {}", ticker)
-      Thread.sleep(10*1000)
+    //  val ticker = mtGoxActor !! null
+      log.info(".")
+      Thread.sleep(5*60*1000)
     }
 
   }

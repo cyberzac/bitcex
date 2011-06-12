@@ -14,6 +14,8 @@ sealed abstract class Fund[T] {
   def +(fund: Fund[T]) = create(amount + fund.amount)
 
   def *(factor: BigDecimal) = create(amount * factor)
+
+  def rounded = "%.2f".format(amount)
 }
 
 case class SEK(amount: BigDecimal) extends Fund[SEK] {
@@ -57,8 +59,8 @@ abstract class Order[T, S] {
   def total: S = price * amount.amount
 }
 
-case class SellOrderSEK(amount: BTC, price: SEK) extends Order[BTC, SEK]
+case class AskOrderSEK(amount: BTC, price: SEK) extends Order[BTC, SEK]
 
-case class BuyOrderSEK(amount: BTC, price: SEK) extends Order[BTC, SEK]
+case class BidOrderSEK(amount: BTC, price: SEK) extends Order[BTC, SEK]
 
 

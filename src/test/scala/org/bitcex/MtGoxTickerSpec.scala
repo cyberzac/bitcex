@@ -23,11 +23,14 @@ class MtGoxTickerSpec extends Specification {
   "MtGoxTicker convert to Ticker" should {
 
     val mtGoxTicker = MtGoxTicker(USD(10), USD(1), 5, USD(3), USD(7), USD(5))
-    val converter = CurrencyConverter(USD(1), SEK(100), 0.01)
-    val ticker = mtGoxTicker.toTicker(converter)
+    val converter = Some(CurrencyConverter(USD(1), SEK(100), 0.01))
+    val tickerOption = mtGoxTicker.toTicker(converter)
+    val ticker = tickerOption.get
+
 
     "Last price" in { ticker.last must_== SEK(500) }
     "Ask price is ask plus spread" in { ticker.ask must_== SEK(707) }
      "Bid price is bid minus spread " in{ ticker.bid must_== SEK(297)}
+    "return None if the converter is None" in { mtGoxTicker.toTicker(None) must_==  None }
   }
 }

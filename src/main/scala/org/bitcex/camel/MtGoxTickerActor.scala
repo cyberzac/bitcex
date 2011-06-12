@@ -1,26 +1,28 @@
 package org.bitcex.camel
 
-import akka.camel.{Message, Producer}
 import org.slf4j.LoggerFactory
 import net.liftweb.json._
 import org.bitcex.MtGoxTicker
 import akka.actor.{ActorRef, Actor}
+import akka.camel.{Consumer, Message, Producer}
 
-class MtGoxTickerActor(bitcexActor:ActorRef) extends Actor with Producer {
+/**
+ * Translates from json to MtGoxTicker case class
+ */
+class MtGoxTickerActor(bitcexActor:ActorRef) extends Actor with Consumer {
   val log = LoggerFactory.getLogger(getClass)
 
-  def endpointUri = "https://mtgox.com/code/data/ticker.php"
+  def endpointUri = "seda:mtGoxTicker"
 
-  log.info("MtGox actor started {}", endpointUri)
+  log.info("MtGoxTicker actor started")
 
-  override protected def receiveAfterProduce = {
+ def receive = {
     case msg: Message => {
       val body = msg.bodyAs[String]
       log.info("Received raw: {}", body)
       val json = parse(body)
-      //val ticker = (json \"ticker").extract[MtGoxTicker] // No go conversion error
       val mtGoxTicker = MtGoxTicker(json)
-      bitcexActor forward mtGoxTicker
+      bitcexActor ! mtGoxTicker
     }
 
   }
