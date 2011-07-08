@@ -3,18 +3,20 @@ package org.bitcex.camel
 import org.slf4j.LoggerFactory
 import akka.actor.{ActorRef, Actor}
 import akka.camel.{Producer, Consumer, Message}
-import org.bitcex.{SEK, Ticker}
+import org.bitcex.model.{SEK, Ticker}
+import org.springframework.stereotype.Component
+import org.springframework.beans.factory.annotation.Autowired
 
+@Component
+@Autowired
 class IndexActor(ticker: ActorRef, velocity: ActorRef) extends Actor with Consumer {
 
   val log = LoggerFactory.getLogger(getClass)
 
-  val uri = "http://localhost:8877/"
+//  val uri = "jetty:http://0.0.0.0:8877/"
+  def endpointUri =  "servlet:///"
 
-  def endpointUri = "jetty:" + uri
-
-
-  log.info("Buyer started at {}", uri)
+  log.info("Buyer started at {}", endpointUri)
 
 
   def receive = {
@@ -25,11 +27,12 @@ class IndexActor(ticker: ActorRef, velocity: ActorRef) extends Actor with Consum
   }
 }
 
+@Component
 class VelocityActor extends Actor with Producer {
 
   val log = LoggerFactory.getLogger(getClass)
 
-  def endpointUri = "direct:velocity"
+  def endpointUri = "velocity:index.vm"
 
   override protected def receiveBeforeProduce = {
     case Some(ticker: Ticker[SEK]) => {

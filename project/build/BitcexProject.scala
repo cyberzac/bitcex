@@ -3,11 +3,12 @@ import sbt._
 class BitcexProject(info: ProjectInfo) extends DefaultWebProject(info) with AkkaProject {
 
   val akka_slf4j = akkaModule("slf4j")
+  val akka_spring = akkaModule("spring")
   val akka_camel = akkaModule("camel")
   val akka_camel_typed = akkaModule("camel-typed")
 
-  val java2Repo = "Java 2 repo" at "http://download.java.net/maven/2/"
   val saxonRepo = "Saxon @ Eviware" at "http://www.eviware.com/repository/maven2/"
+  val java2Repo = "Java 2 repo" at "http://download.java.net/maven/2/"
   //val jbossRepo = "JBoss Repository" at "http://repository.jboss.org/maven2/"
   val scalaSnapshotsRepo = "Scala Snapshots" at "http://main.scala-tools.org/repo-snapshots"
 
@@ -24,6 +25,18 @@ class BitcexProject(info: ProjectInfo) extends DefaultWebProject(info) with Akka
   val saxon_dom = "saxon" % "saxon-dom" % saxon_version
 
   val specs = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.7" % "test"
+
+/*
+  val specs2 = "org.specs2" %% "specs2" % "1.4" % "test"
+   // with Scala 2.9.0
+   val scalaz = "org.specs2" %% "specs2-scalaz-core" % "6.0.RC2" % "test"
+   def specs2Framework = new TestFramework("org.specs2.runner.SpecsFramework")
+   override def testFrameworks = super.testFrameworks ++ Seq(specs2Framework)
+   val snapshots = "snapshots" at "http://scala-tools.org/repo-snapshots"
+   val releases  = "releases" at "http://scala-tools.org/repo-releases"
+*/
+
+
   val scalaTest = "org.scalatest" % "scalatest" % "1.2" % "test"
   val jetty7 = "org.eclipse.jetty" % "jetty-webapp" % "7.0.2.RC0" % "test"
 

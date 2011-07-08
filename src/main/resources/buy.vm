@@ -10,7 +10,7 @@ Buy BTC for ${headers.sek} at max ${headers.max} to ${headers.btcAddress}
 
 Please send ${headers.sek} to SEB 1234 12345 6789
 
-If the orders can't be filled your money will be returned tp ${headers.mailAddress}
+If the orders can't be filled your money will be returned to ${headers.mailAddress}
 
 </body>
 </html>

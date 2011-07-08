@@ -4,9 +4,15 @@ import org.slf4j.LoggerFactory
 import akka.camel.{Consumer, Message}
 import xml.{Elem, XML}
 import org.bitcex._
+import model.{SEK, USD}
 import org.joda.time.DateMidnight
 import akka.actor.{ActorRef, Actor}
+import org.springframework.stereotype.Component
+import org.springframework.beans.factory.annotation.Autowired
+import util.CurrencyConverter
 
+@Component
+@Autowired
 class EcbCurrencyActor(tickerActor:ActorRef) extends Actor with Consumer {
   val log = LoggerFactory.getLogger(getClass)
   val currencySpread = 0.05
@@ -19,6 +25,7 @@ class EcbCurrencyActor(tickerActor:ActorRef) extends Actor with Consumer {
 
     case msg: Message => {
       val body = msg.bodyAs[String]
+      log.info("Received {}", body)
       val update = XML.loadString(body)
       val converter = parseMessage(update)
       tickerActor ! converter

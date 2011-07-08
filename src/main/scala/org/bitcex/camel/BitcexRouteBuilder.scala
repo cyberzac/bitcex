@@ -2,7 +2,9 @@ package org.bitcex.camel
 
 import org.apache.camel.scala.dsl.builder.RouteBuilder
 import org.apache.camel.scala.{Period, Frequency}
-import javax.sql.rowset.serial.SerialDatalink
+import org.springframework.stereotype.Component
+import org.springframework.beans.factory.annotation.Autowired
+
 
 object BitcexRouteBuilder extends RouteBuilder {
 
@@ -12,13 +14,8 @@ object BitcexRouteBuilder extends RouteBuilder {
 
   // MtGox tickers
   val mtGoxTickerUrl = "https://mtgox.com/code/data/ticker.php"
-  mtGoxTickerUrl.throttle(1 per 5*60 seconds) -->  "seda:mtGoxTicker"
+  mtGoxTickerUrl.throttle(1 per 5 *60 seconds) -->  "seda:mtGoxTicker"
 
-  "direct:velocity" --> "velocity:index.vm"
+  "servlet:///update" --> mtGoxTickerUrl --> "seda:mtGoxTicker"
 
-//  "jetty:http://localhost:8877/" --> "seda:TickerActor" --> "velocity:index.html"
-//  "servlet:///index" --> "seda:TickerActor" --> "velocity:index.html"
-
-   // Buy
-  //  "servlet:///buy" -->  "velocity:buy.vm" --> "smtps://smtp.gmail.com?username=martin.zachrison&password=knt72/Qk&to=zac@cyberzac.se"
 }

@@ -16,11 +16,12 @@ object Main {
 
     log.info("Starting bitcex")
 
-    val buyerActor = actorOf[BuyActor]
+    val buyerActor = actorOf[ServletActor]
     val tickerActor = actorOf[TickerActor]
     val velocityActor = actorOf[VelocityActor]
     val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))
     val mtGoxActor = actorOf(new MtGoxTickerActor(tickerActor))
+    val mtGoxProducer = actorOf(new MtGoxTickerProducer((mtGoxActor)))
     val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor))
 
     startCamelService
@@ -34,6 +35,7 @@ object Main {
     velocityActor.start()
     indexActor.start()
     mtGoxActor.start()
+    mtGoxProducer.start()
     ecbCurrencyActor.start()
          /*
     val template = CamelContextManager.mandatoryTemplate

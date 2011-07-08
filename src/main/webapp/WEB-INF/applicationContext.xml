@@ -2,15 +2,34 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:akka="http://akka.io/schema/akka"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://akka.io/schema/akka http://akka.io/akka-1.0.xsd">
 
-    <camelContext xmlns="http://camel.apache.org/schema/spring">
+    <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
         <package>org.bitcex</package>
         <contextScan/>
         <jmxAgent id="agent" disabled="false"/>
     </camelContext>
 
+    <!--supervision id="supervision-untyped-actors" xmlns="http://akka.io/schema/akka">
+        <restart-strategy failover="AllForOne" retries="3" timerange="1000">
+            <trap-exits>
+                <trap-exit>java.io.IOException</trap-exit>
+                <trap-exit>java.lang.NullPointerException</trap-exit>
+            </trap-exits>
+        </restart-strategy>
+        <untyped-actors>
+            <untyped-actor implementation="org.bitcex.camel.TradeActoror"  lifecycle="permanent"/>
+        </untyped-actors>
+    </supervision-->
+
+    <camel-service xmlns="http://akka.io/schema/akka">
+        <camel-context ref="camelContext"/>
+    </camel-service>
+
+    <bean class="org.bitcex.camel.SpringMain"/>
 
 </beans>

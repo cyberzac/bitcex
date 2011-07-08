@@ -31,4 +31,8 @@
 		<servlet-name>CamelServlet</servlet-name>
 		<url-pattern>/camel/*</url-pattern>
 	</servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>camel/</welcome-file>
+    </welcome-file-list>
 </web-app>

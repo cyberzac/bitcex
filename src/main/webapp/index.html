@@ -11,11 +11,11 @@ S&auml;lj och k&ouml;p bitcoins  i kronor.
 <table>
     <tr>
         <td>Belopp</td>
-        <td><input type="number" name="sek" /></td>
+        <td><input type="number" name="amount" /></td>
     </tr>
     <tr>
         <td>Max SEK/BTC</td>
-        <td><input type="max" name="max" /></td>
+        <td><input type="number" name="maxPrice" /></td>
     </tr>
     <tr>
         <td>Bitcoinadress</td>
@@ -28,8 +28,7 @@ S&auml;lj och k&ouml;p bitcoins  i kronor.
     <tr>
         <td></td>
         <td align="right"><input type="submit" value="K&ouml;p" /></td>
-        <td></td>
-        <td></td>
+        <input type="hidden" name="userId" value="1"/>
     </tr>
 </table>
 </form>

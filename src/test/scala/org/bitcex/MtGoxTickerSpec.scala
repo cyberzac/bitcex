@@ -1,7 +1,9 @@
 package org.bitcex
 
+import model.{SEK, USD}
 import org.specs.Specification
 import net.liftweb.json.parse
+import util.CurrencyConverter
 
 class MtGoxTickerSpec extends Specification {
 
