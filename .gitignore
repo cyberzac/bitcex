@@ -3,3 +3,6 @@
 *.iml
 target/
 *_managed/
+
+project-sbt7/
+project-0.10/
