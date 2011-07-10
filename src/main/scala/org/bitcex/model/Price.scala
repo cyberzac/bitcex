@@ -1,37 +1,40 @@
 package org.bitcex.model
 
-import org.eclipse.jetty.server.UserIdentity
+import sun.java2d.SunGraphicsEnvironment.T1Filter
+
 
 sealed abstract class Price[T] {
   val amount: BigDecimal
 
   def create(amount: BigDecimal): T
 
-  def >(fund: Price[T]) = amount > fund.amount
+  def >(price: Price[T]) = amount > price.amount
 
-  def >=(fund: Price[T]) = amount >= fund.amount
+  def >=(price: Price[T]) = amount >= price.amount
 
-  def <(fund: Price[T]) = amount < fund.amount
+  def <(price: Price[T]) = amount < price.amount
 
-  def <=(fund: Price[T]) = amount <= fund.amount
+  def <=(price: Price[T]) = amount <= price.amount
 
-  def -(fund: Price[T]) = create(amount - fund.amount)
+  def -(price: Price[T]) = create(amount - price.amount)
 
-  def +(fund: Price[T]) = create(amount + fund.amount)
+  def +(price: Price[T]) = create(amount + price.amount)
 
   def *(factor: BigDecimal):T = create(amount * factor)
 
-  def *(fund:Price[T]):T = fund * amount
+  def *(price:Price[T]):T = price * amount
 
   def /(factor: BigDecimal):T = create(amount / factor)
 
-  def /(fund:Price[T]):T = this / fund.amount
+  def /(price:Price[T]):T = this / price.amount
 
-  def min(fund:Price[T]) = create(amount.min(fund.amount))
+  def unary_-():T = create(-amount)
 
-  def max(fund:Price[T]) = create(amount.max(fund.amount))
+  def min(price:Price[T]) = create(amount.min(price.amount))
 
-  def rounded = "%.2f".format(amount)
+  def max(price:Price[T]) = create(amount.max(price.amount))
+
+  def rounded:String = "%.2f".format(amount)
 
 }
 

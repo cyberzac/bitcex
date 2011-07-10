@@ -53,6 +53,10 @@ class PriceSpec extends Specification {
        SEK(5) / 2 must_== SEK(2.5)
      }
 
+    "Hava a unary negate method" in {
+      -SEK(5) must_== SEK(-5)
+    }
+
 
     "Have a min method" in {
       SEK(5).min(SEK(6)) must_== SEK(5)
