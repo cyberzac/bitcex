@@ -35,12 +35,22 @@ class MatcherSpec extends Specification {
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(ask_5_11).isEmpty mustBe true
       dut.askOrders must containInOrder(ask_5_9, ask_5_10, ask_5_11)
-      dut.bidOrders must haveSize(0)
+      dut.bidOrders.isEmpty mustBe true
+    }
+
+    "Que an BidOrder if no asks are present" in {
+      val dut = new Matcher[BTC, SEK]()
+      dut.matchOrder(bid_3_10).isEmpty mustBe true
+      dut.askOrders.isEmpty mustBe true
+      dut.bidOrders must containInOrder(bid_3_10)
     }
 
     "Que an BidOrder if no match is possible" in {
       val dut = new Matcher[BTC, SEK]()
+      dut.matchOrder(ask_5_11).isEmpty mustBe true
       dut.matchOrder(bid_3_10).isEmpty mustBe true
+      dut.askOrders must containInOrder(ask_5_11)
+      dut.bidOrders must containInOrder(bid_3_10)
     }
 
     "Que BidOrders in falling order" in {
@@ -49,7 +59,7 @@ class MatcherSpec extends Specification {
       dut.matchOrder(bid_5_9).isEmpty mustBe true
       dut.matchOrder(bid_5_11).isEmpty mustBe true
       dut.bidOrders must containInOrder(bid_5_11, bid_3_10, bid_5_9)
-      dut.askOrders must haveSize(0)
+      dut.askOrders.isEmpty mustBe true
     }
 
     "Return a trade if ask and bid are equal for an bid order" in {
@@ -66,8 +76,8 @@ class MatcherSpec extends Specification {
       val dut = new Matcher[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(bid_5_9)(0)
-      dut.askOrders must haveSize(0)
-      dut.bidOrders must haveSize(0)
+      dut.askOrders.isEmpty mustBe true
+      dut.bidOrders.isEmpty mustBe true
     }
 
     "Return a trade with average price if the ask and bid overrun each other for a bid order" in {
@@ -103,10 +113,10 @@ class MatcherSpec extends Specification {
       dut.matchOrder(ask_5_10).isEmpty mustBe true
       val trades = dut.matchOrder(bid_11_10)
       val trade1 = Trade(BTC(5), SEK(10), sellerRef, buyerRef)
-      val trade2 = Trade(BTC(5), SEK(9.5),sellerRef, buyerRef)
+      val trade2 = Trade(BTC(5), SEK(9.5), sellerRef, buyerRef)
       trades must containInOrder(trade1, trade2)
-      dut.askOrders must haveSize(0)
-      dut.bidOrders must  containInOrder(bid_1_10)
+      dut.askOrders.isEmpty mustBe true
+      dut.bidOrders must containInOrder(bid_1_10)
 
     }
 
@@ -114,6 +124,7 @@ class MatcherSpec extends Specification {
 
   }
 
-  def bidOrder(amount:BTC, price:SEK, buyerRef:ActorRef = buyerRef) = BidOrderSEK(amount, price,buyerRef)
-  def askOrder(amount:BTC, price:SEK, sellerRef:ActorRef = sellerRef) = AskOrderSEK(amount, price, sellerRef)
+  def bidOrder(amount: BTC, price: SEK, buyerRef: ActorRef = buyerRef) = BidOrderSEK(amount, price, buyerRef)
+
+  def askOrder(amount: BTC, price: SEK, sellerRef: ActorRef = sellerRef) = AskOrderSEK(amount, price, sellerRef)
 }
