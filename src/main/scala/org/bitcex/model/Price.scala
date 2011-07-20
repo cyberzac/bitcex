@@ -1,24 +1,21 @@
 package org.bitcex.model
 
-import sun.java2d.SunGraphicsEnvironment.T1Filter
-
-
 sealed abstract class Price[T] {
   val amount: BigDecimal
 
   def create(amount: BigDecimal): T
 
-  def >(price: Price[T]) = amount > price.amount
+  def >(price: Price[T]):Boolean = amount > price.amount
 
-  def >=(price: Price[T]) = amount >= price.amount
+  def >=(price: Price[T]):Boolean = amount >= price.amount
 
-  def <(price: Price[T]) = amount < price.amount
+  def <(price: Price[T]):Boolean = amount < price.amount
 
-  def <=(price: Price[T]) = amount <= price.amount
+  def <=(price: Price[T]):Boolean = amount <= price.amount
 
-  def -(price: Price[T]) = create(amount - price.amount)
+  def -(price: Price[T]):T = create(amount - price.amount)
 
-  def +(price: Price[T]) = create(amount + price.amount)
+  def +(price: Price[T]):T = create(amount + price.amount)
 
   def *(factor: BigDecimal):T = create(amount * factor)
 
@@ -29,6 +26,8 @@ sealed abstract class Price[T] {
   def /(price:Price[T]):T = this / price.amount
 
   def unary_-():T = create(-amount)
+
+  def signum:Int = amount.signum
 
   def min(price:Price[T]) = create(amount.min(price.amount))
 

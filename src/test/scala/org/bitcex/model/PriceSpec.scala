@@ -65,5 +65,11 @@ class PriceSpec extends Specification {
     "Have a max method" in {
       SEK(5).max(SEK(6)) must_== SEK(6)
     }
+
+    "Have a  signum method" in {
+      SEK(-3).signum must_== -1
+      SEK(0).signum must_== 0
+      SEK(20).signum must_== 1
+    }
   }
 }

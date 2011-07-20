@@ -9,19 +9,24 @@ class MatcherSpec extends Specification {
 
   val seller = User(Name("Seller"), Email("mail"), UserId("1"), Password("pw"))
   val sellerRef = actorOf(new UserActor(buyer))
-  val ask_5_10 = AskOrderSEK(BTC(5), SEK(10), sellerRef)
-  val ask_5_9 = AskOrderSEK(BTC(5), SEK(9), sellerRef)
   val ask_2_9 = AskOrderSEK(BTC(2), SEK(9), sellerRef)
+  val ask_4_9 = AskOrderSEK(BTC(4), SEK(9), sellerRef)
+  val ask_5_9 = AskOrderSEK(BTC(5), SEK(9), sellerRef)
+  val ask_1_10 = AskOrderSEK(BTC(1), SEK(10), sellerRef)
+  val ask_5_10 = AskOrderSEK(BTC(5), SEK(10), sellerRef)
+  val ask_10_9 = AskOrderSEK(BTC(10), SEK(9), sellerRef)
   val ask_5_11 = AskOrderSEK(BTC(5), SEK(11), sellerRef)
 
   val buyer = User(Name("Seller"), Email("mail"), UserId("1"), Password("pw"))
   val buyerRef = actorOf(new UserActor(buyer))
-  val bid_3_10 = BidOrderSEK(BTC(3), SEK(10), buyerRef)
-  val bid_9_10 = BidOrderSEK(BTC(9), SEK(10), buyerRef)
+  val bid_3_9 = BidOrderSEK(BTC(3), SEK(9), buyerRef)
   val bid_5_9 = BidOrderSEK(BTC(5), SEK(9), buyerRef)
-  val bid_5_11 = BidOrderSEK(BTC(5), SEK(11), buyerRef)
-  val bid_11_10 = BidOrderSEK(BTC(11), SEK(10), buyerRef)
   val bid_1_10 = BidOrderSEK(BTC(1), SEK(10), buyerRef)
+  val bid_3_10 = BidOrderSEK(BTC(3), SEK(10), buyerRef)
+  val bid_4_10 = BidOrderSEK(BTC(4), SEK(10), buyerRef)
+  val bid_9_10 = BidOrderSEK(BTC(9), SEK(10), buyerRef)
+  val bid_11_10 = BidOrderSEK(BTC(11), SEK(10), buyerRef)
+  val bid_5_11 = BidOrderSEK(BTC(5), SEK(11), buyerRef)
 
   "A Matcher" should {
     "Que an AskOrder if no match is possible" in {
@@ -103,8 +108,15 @@ class MatcherSpec extends Specification {
     "Replace the ask order with an ask order with the remaing amount if the match bid amount was lower" in {
       val dut = new Matcher[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
-      dut.matchOrder(bid_3_10)(0)
+      dut.matchOrder(bid_3_10)
       dut.askOrders must containInOrder(ask_2_9)
+    }
+
+    "Replace the bid order with an bid order with the remaing amount if the match ask amount was lower" in {
+      val dut = new Matcher[BTC, SEK]()
+      dut.matchOrder(bid_9_10).isEmpty mustBe true
+      dut.matchOrder(ask_5_9)
+      dut.bidOrders must containInOrder(bid_4_10)
     }
 
     "Match multiple asks and yield several Trades for one bid order" in {
@@ -117,10 +129,19 @@ class MatcherSpec extends Specification {
       trades must containInOrder(trade1, trade2)
       dut.askOrders.isEmpty mustBe true
       dut.bidOrders must containInOrder(bid_1_10)
-
     }
 
-    //Todo match ask for existing bids
+     "Match multiple bids and yield several Trades for one ask order" in {
+      val dut = new Matcher[BTC, SEK]()
+      dut.matchOrder(bid_3_9).isEmpty mustBe true
+      dut.matchOrder(bid_3_10).isEmpty mustBe true
+      val trades = dut.matchOrder(ask_10_9)
+      val trade1 = Trade(BTC(3), SEK(9), sellerRef, buyerRef)
+      val trade2 = Trade(BTC(3), SEK(9.5), sellerRef, buyerRef)
+      trades must containInOrder(trade1, trade2)
+      dut.bidOrders.isEmpty mustBe true
+      dut.askOrders must containInOrder(ask_4_9)
+    }
 
   }
 
