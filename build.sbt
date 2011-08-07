@@ -7,8 +7,9 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.9.0-1"
 
-resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
+retrieveManaged := true
 
+resolvers +=  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
 
 libraryDependencies ++= Seq(
     "se.scalablesolutions.akka" % "akka-actor" % "1.1.2",
@@ -16,11 +17,7 @@ libraryDependencies ++= Seq(
     "se.scalablesolutions.akka" % "akka-camel" % "1.1.2",
     "se.scalablesolutions.akka" % "akka-camel-typed" % "1.1.2",
     "joda-time" % "joda-time" % "1.6.2",
-    "net.liftweb" %% "lift-json" % "2.4-SNAPSHOT",
-      // "net.debasishg" % "sjson_2.9.0" % "0.12",
-    //  "net.sf.saxon" % "saxonhe" % "9.2.0_3j",
-    //  "net.sourceforge.saxon" % "saxon" % "9.1.0.8",
-    "saxon" % "saxon" % "9.1.0.8j",
+    "net.liftweb" %% "lift-json" % "2.4-M1",
     "saxon" % "saxon-dom" % "9.1.0.8j",
     "org.scala-tools.testing" % "specs_2.8.1" % "1.6.7" % "test",
     /*
@@ -41,7 +38,6 @@ libraryDependencies ++= Seq(
     "org.apache.camel" % "camel-velocity" % "2.7.1",
     "org.apache.camel" % "camel-jetty" % "2.7.1",
     "org.apache.camel" % "camel-mail" % "2.7.1",
-    //   "org.apache.camel" % "camel-saxon" % "2.7.1"
     "org.apache.camel" % "camel-test" % "2.7.1" % "test",
     "org.springframework" % "spring-core" % "3.0.5.RELEASE",
     "org.springframework" % "spring-web" % "3.0.5.RELEASE",
