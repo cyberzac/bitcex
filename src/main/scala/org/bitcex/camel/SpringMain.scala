@@ -13,7 +13,7 @@ class SpringMain {
 
   log.info("Starting bitcex (spring)")
 
-  val buyerActor = TypedActor.newInstance(classOf[Buyer], classOf[ServletActor])
+  val traderActor = TypedActor.newInstance(classOf[Trader], classOf[ServletActor])
   val tickerActor = actorOf[TickerActor]
   val velocityActor = actorOf[VelocityActor]
   val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))

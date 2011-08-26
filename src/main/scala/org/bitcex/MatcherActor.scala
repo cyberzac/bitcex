@@ -1,19 +1,28 @@
 package org.bitcex
 
 import akka.actor.Actor
-import model.{BidOrder, AskOrder, Price}
+import model.{Trade, BidOrder, AskOrder, Price}
 
-//Todo where to send the trades
 class MatcherActor[T <: Price[T], S <: Price[S]] extends Actor {
   val matcher = new Matcher[T, S]()
+
+  def sendTrades(trades: scala.List[Trade[T, S]]) {
+    trades.foreach(trade => {
+      trade.buyerRef ! trade
+      trade.sellerRef ! trade
+    })
+  }
+
   protected def receive = {
 
-    case askOrder:AskOrder[T, S] => {
-        val trades = matcher.matchOrder(askOrder)
+    case askOrder: AskOrder[T, S] => {
+      val trades = matcher.matchOrder(askOrder)
+      sendTrades(trades)
     }
 
-    case bidOrder:BidOrder[T, S] => {
-        val trades = matcher.matchOrder(bidOrder)
+    case bidOrder: BidOrder[T, S] => {
+      val trades = matcher.matchOrder(bidOrder)
+      sendTrades(trades)
     }
   }
 }

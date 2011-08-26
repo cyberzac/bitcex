@@ -9,7 +9,7 @@ import org.bitcex._
 import model._
 import akka.actor.{ActorRef, TypedActor}
 
-trait Buyer {
+trait Trader {
 
   val userService: UserService
 
@@ -17,13 +17,14 @@ trait Buyer {
   def buy(@Header("amount") amount: String, @Header("price") price: String, @Header("email") userId: String, @Header("password") password: String): String
 
   @consume("servlet:///sell")
-  def sell(@Header("amount") amount: String, @Header("price") price: String, @Header("userId") userId: String, @Header("password") password: String): String
+  def sell(@Header("amount") amount: String, @Header("price") price: String, @Header("email") userId: String, @Header("password") password: String): String
 
 }
 
-class ServletActor extends TypedActor with Buyer {
-
+class ServletActor extends TypedActor with Trader {
+  val matcherActor = actorOf[MatcherActor[BTC, SEK]].start
   var userActors = Map[User, ActorRef]()
+  // Todo cake pattern or spring...
   val userService = new InMemoryUserService()
   val log = LoggerFactory.getLogger(getClass)
   val badAuth = "wrong email/password"
@@ -36,7 +37,8 @@ class ServletActor extends TypedActor with Buyer {
     val price = new BigDecimal(priceStr)
     val user = getUserActor(Email(email), password).getOrElse(return badAuth)
     val order = BidOrderSEK(BTC(amount), SEK(price), user)
-    val reply = "You bought %s" format order
+    matcherActor ! order
+    val reply = "Bid order created: %s" format order
     self.reply(reply)
     reply
   }
@@ -47,7 +49,8 @@ class ServletActor extends TypedActor with Buyer {
     val price = new BigDecimal(priceStr)
     val user = getUserActor(Email(email), password).getOrElse(return badAuth)
     val order = AskOrderSEK(BTC(amount), SEK(price), user)
-    val reply = "You sold %s" format order
+    matcherActor ! order
+    val reply = "Ask order created: %s" format order
     self.reply(reply)
     reply
   }
