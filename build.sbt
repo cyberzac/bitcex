@@ -1,67 +1,73 @@
-
 organization := "org.bitcex"
 
 name := "Svenska Bitcoin"
 
-version := "1.0-SNAPSHOT"
+version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.9.0-1"
+scalaVersion := "2.9.1"
 
 retrieveManaged := true
 
-seq(webSettings :_*)
+seq(webSettings: _*)
 
-  resolvers ++= Seq(
-    "snapshots" at "http://scala-tools.org/repo-snapshots",
-     "releases" at "http://scala-tools.org/repo-releases",
-     "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
-       )
+resolvers ++= Seq(
+  "snapshots" at "http://scala-tools.org/repo-snapshots",
+  "releases" at "http://scala-tools.org/repo-releases",
+  "typesafe" at "http://repo.typesafe.com/typesafe/releases",
+  "restlet" at "http://maven.restlet.org"
+)
 
-libraryDependencies ++=  {
-  val akka_version = "1.1.2"
+libraryDependencies ++= {
+  val akka_version = "1.1.3"
   Seq(
     "se.scalablesolutions.akka" % "akka-actor" % akka_version,
     "se.scalablesolutions.akka" % "akka-spring" % akka_version,
     "se.scalablesolutions.akka" % "akka-camel" % akka_version,
     "se.scalablesolutions.akka" % "akka-camel-typed" % akka_version,
     "se.scalablesolutions.akka" % "akka-testkit" % akka_version
-)
+  )
 }
 
-libraryDependencies ++=  Seq(
-    "joda-time" % "joda-time" % "1.6.2",
-    "net.liftweb" %% "lift-json" % "2.4-M1",
+// Todo check versions of unfiltered
+// Todo check versions of dispatch
+
+libraryDependencies ++= {
+  val camelVersion = "2.8.0"
+  val springVersion = "3.0.5.RELEASE"
+  val slf4jVersion = "1.6.1"
+  val liftVersion = "2.4-SNAPSHOT"
+//  val unfiltered_version = "0.4.1"
+  val dispatch_version = "0.8.5"
+  Seq(
+    "joda-time" % "joda-time" % "1.6.1",
+    "net.liftweb" %% "lift-json" % liftVersion,
     "saxon" % "saxon-dom" % "9.1.0.8j",
     "org.scala-tools.testing" % "specs_2.8.1" % "1.6.7" % "test",
     "org.specs2" %% "specs2" % "1.5",
-    // with Scala 2.8.1
-    /*
-     "org.specs2" %% "specs2" % "1.4" % "test",
-     // with Scala 2.9.0
-     */
-     "org.specs2" %% "specs2-scalaz-core" % "6.0.RC2" % "test",
-/*
-     def specs2Framework = new TestFramework("org.specs2.runner.SpecsFramework")
-     override def testFrameworks = super.testFrameworks ++ Seq(specs2Framework)
-     "snapshots" at "http://scala-tools.org/repo-snapshots"
-     "releases" at "http://scala-tools.org/repo-releases"
-     */
+    //    "org.specs2" %% "specs2-scalaz-core" % "6.0.RC2" % "test",
     "org.scalatest" % "scalatest" % "1.2" % "test",
-    "org.eclipse.jetty" % "jetty-webapp" % "7.0.2.RC0" % "test",
-    "org.apache.camel" % "camel-core" % "2.7.1",
-    "org.apache.camel" % "camel-scala" % "2.7.1",
-    "org.apache.camel" % "camel-servlet" % "2.7.1",
-    "org.apache.camel" % "camel-spring" % "2.7.1",
-    "org.apache.camel" % "camel-velocity" % "2.7.1",
-    "org.apache.camel" % "camel-jetty" % "2.7.1",
-    "org.apache.camel" % "camel-mail" % "2.7.1",
-    "org.apache.camel" % "camel-test" % "2.7.1" % "test",
-    "org.springframework" % "spring-core" % "3.0.5.RELEASE",
-    "org.springframework" % "spring-web" % "3.0.5.RELEASE",
-    "org.slf4j" % "slf4j-api" % "1.6.1",
-    "org.slf4j" % "slf4j-log4j12" % "1.6.1",
-    "com.weiglewilczek.slf4s" %% "slf4s" % "1.0.6"
-)
+    "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "jetty",
+ //   "net.databinder" %% "unfiltered-jetty" % unfiltered_version,
+ //   "net.databinder" %% "unfiltered-filter" % unfiltered_version,
+    "net.databinder" %% "dispatch-http" % dispatch_version,
+    //     "org.apache.camel" % "apache-camel" % camelVersion,
+    "org.apache.camel" % "camel-core" % camelVersion,
+    "org.apache.camel" % "camel-scala" % camelVersion,
+    "org.apache.camel" % "camel-servlet" % camelVersion,
+    "org.apache.camel" % "camel-spring" % camelVersion,
+    "org.apache.camel" % "camel-velocity" % camelVersion,
+    "org.apache.camel" % "camel-jetty" % camelVersion,
+    "org.apache.camel" % "camel-mail" % camelVersion,
+    "org.apache.camel" % "camel-restlet" % camelVersion,
+    "org.apache.camel" % "camel-test" % camelVersion % "test",
+    "org.springframework" % "spring-core" % springVersion,
+    "org.springframework" % "spring-web" % springVersion,
+    "org.restlet.jee" % "org.restlet.ext.spring"  % "2.0.8",
+    "org.slf4j" % "slf4j-api" % slf4jVersion,
+    "org.slf4j" % "slf4j-log4j12" % slf4jVersion,
+    "com.weiglewilczek.slf4s" %% "slf4s" % "1.0.7"
+  )
+}
 
 
 

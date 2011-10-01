@@ -5,9 +5,9 @@ import org.specs.Specification
 import akka.actor.Actor._
 import akka.actor.ActorRef
 
-class MatcherSpec extends Specification {
+class OrderBookSpec extends Specification {
 
-  val seller = User(Name("Seller"), Email("mail"), UserId("1"), Password("pw"))
+  val seller = User("Seller", "mail", "1", "pw")
   val sellerRef = actorOf(new UserActor(buyer))
   val ask_2_9 = AskOrderSEK(BTC(2), SEK(9), sellerRef)
   val ask_4_9 = AskOrderSEK(BTC(4), SEK(9), sellerRef)
@@ -17,7 +17,7 @@ class MatcherSpec extends Specification {
   val ask_10_9 = AskOrderSEK(BTC(10), SEK(9), sellerRef)
   val ask_5_11 = AskOrderSEK(BTC(5), SEK(11), sellerRef)
 
-  val buyer = User(Name("Seller"), Email("mail"), UserId("1"), Password("pw"))
+  val buyer = User("Buyer", "mail", "2", "pw")
   val buyerRef = actorOf(new UserActor(buyer))
   val bid_3_9 = BidOrderSEK(BTC(3), SEK(9), buyerRef)
   val bid_5_9 = BidOrderSEK(BTC(5), SEK(9), buyerRef)
@@ -28,14 +28,14 @@ class MatcherSpec extends Specification {
   val bid_11_10 = BidOrderSEK(BTC(11), SEK(10), buyerRef)
   val bid_5_11 = BidOrderSEK(BTC(5), SEK(11), buyerRef)
 
-  "A Matcher" should {
+  "An OrderBook" should {
     "Que an AskOrder if no match is possible" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_10).isEmpty mustBe true
     }
 
     "Que AskOrders in rising order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_10).isEmpty mustBe true
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(ask_5_11).isEmpty mustBe true
@@ -44,14 +44,14 @@ class MatcherSpec extends Specification {
     }
 
     "Que an BidOrder if no asks are present" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(bid_3_10).isEmpty mustBe true
       dut.askOrders.isEmpty mustBe true
       dut.bidOrders must containInOrder(bid_3_10)
     }
 
     "Que an BidOrder if no match is possible" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_11).isEmpty mustBe true
       dut.matchOrder(bid_3_10).isEmpty mustBe true
       dut.askOrders must containInOrder(ask_5_11)
@@ -59,7 +59,7 @@ class MatcherSpec extends Specification {
     }
 
     "Que BidOrders in falling order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(bid_3_10).isEmpty mustBe true
       dut.matchOrder(bid_5_9).isEmpty mustBe true
       dut.matchOrder(bid_5_11).isEmpty mustBe true
@@ -68,7 +68,7 @@ class MatcherSpec extends Specification {
     }
 
     "Return a trade if ask and bid are equal for an bid order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       val trade = dut.matchOrder(bid_5_9)(0)
       trade.amount must_== BTC(5)
@@ -78,7 +78,7 @@ class MatcherSpec extends Specification {
     }
 
     "Remove orders in a matched trade for an bid order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(bid_5_9)(0)
       dut.askOrders.isEmpty mustBe true
@@ -86,7 +86,7 @@ class MatcherSpec extends Specification {
     }
 
     "Return a trade with average price if the ask and bid overrun each other for a bid order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       val trade = dut.matchOrder(bid_5_11)(0)
       trade.amount must_== BTC(5)
@@ -96,7 +96,7 @@ class MatcherSpec extends Specification {
     }
 
     "Return a partial trade if the ask and bid amounts differ" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       val trade = dut.matchOrder(bid_3_10)(0)
       trade.amount must_== BTC(3)
@@ -106,21 +106,21 @@ class MatcherSpec extends Specification {
     }
 
     "Replace the ask order with an ask order with the remaing amount if the match bid amount was lower" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(bid_3_10)
       dut.askOrders must containInOrder(ask_2_9)
     }
 
     "Replace the bid order with an bid order with the remaing amount if the match ask amount was lower" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(bid_9_10).isEmpty mustBe true
       dut.matchOrder(ask_5_9)
       dut.bidOrders must containInOrder(bid_4_10)
     }
 
     "Match multiple asks and yield several Trades for one bid order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(ask_5_10).isEmpty mustBe true
       val trades = dut.matchOrder(bid_11_10)
@@ -132,7 +132,7 @@ class MatcherSpec extends Specification {
     }
 
      "Match multiple bids and yield several Trades for one ask order" in {
-      val dut = new Matcher[BTC, SEK]()
+      val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(bid_3_9).isEmpty mustBe true
       dut.matchOrder(bid_3_10).isEmpty mustBe true
       val trades = dut.matchOrder(ask_10_9)

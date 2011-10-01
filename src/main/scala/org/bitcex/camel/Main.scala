@@ -16,7 +16,7 @@ object Main {
 
     log.info("Starting bitcex")
 
-    val buyerActor = actorOf[ServletActor]
+    val buyerActor = actorOf[TraderActor]
     val tickerActor = actorOf[TickerActor]
     val velocityActor = actorOf[VelocityActor]
     val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))

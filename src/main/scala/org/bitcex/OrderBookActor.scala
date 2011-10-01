@@ -3,8 +3,8 @@ package org.bitcex
 import akka.actor.Actor
 import model.{Trade, BidOrder, AskOrder, Price}
 
-class MatcherActor[T <: Price[T], S <: Price[S]] extends Actor {
-  val matcher = new Matcher[T, S]()
+class OrderBookActor[T <: Price[T], S <: Price[S]] extends Actor {
+  val matcher = new OrderBook[T, S]()
 
   def sendTrades(trades: scala.List[Trade[T, S]]) {
     trades.foreach(trade => {

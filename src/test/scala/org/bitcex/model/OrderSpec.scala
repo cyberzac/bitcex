@@ -6,7 +6,7 @@ import org.specs2.mutable.Specification
 
 class OrderSpec extends Specification {
 
-  val user = User(Name("Nisse"), Email("mail"), UserId("1"), Password("pw"))
+  val user = User("Nisse", "mail", "1", "pw")
   val userRef = actorOf(new UserActor(user))
   val askOrderSEK = AskOrderSEK(BTC(10), SEK(5), userRef)
 

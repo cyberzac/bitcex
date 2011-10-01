@@ -3,6 +3,7 @@ package org.bitcex.camel
 import akka.actor.Actor._
 import org.slf4j.LoggerFactory
 import akka.actor.TypedActor
+import org.bitcex.userservice.{UserService, InMemoryUserService}
 
 /**
  * To be started by the Spring context
@@ -13,7 +14,8 @@ class SpringMain {
 
   log.info("Starting bitcex (spring)")
 
-  val traderActor = TypedActor.newInstance(classOf[Trader], classOf[ServletActor])
+  val userService = TypedActor.newInstance(classOf[UserService], classOf[InMemoryUserService], 1000);
+  val traderActor = TypedActor.newInstance(classOf[ServletTrader], new TraderActor(userService))
   val tickerActor = actorOf[TickerActor]
   val velocityActor = actorOf[VelocityActor]
   val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))

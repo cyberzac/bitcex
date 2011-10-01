@@ -32,4 +32,12 @@
 
     <bean class="org.bitcex.camel.SpringMain"/>
 
+    <bean id="RestletComponent" class="org.restlet.Component"/>
+
+    <bean id="RestletComponentService" class="org.apache.camel.component.restlet.RestletComponent">
+        <constructor-arg index="0">
+            <ref bean="RestletComponent"/>
+        </constructor-arg>
+    </bean>
+
 </beans>

@@ -1,15 +1,17 @@
-package org.bitcex.model
+package org.bitcex.userservice
+
+import org.bitcex.model._
 
 trait UserService {
 
   /**
    * Creates a new user
    */
-  def create(name:String, email:String, password:String, sek:SEK=SEK(0), btc:BTC=BTC(0)):User
+  def create(name:Name, email:Email, clear:String, sek:SEK=SEK(0), btc:BTC=BTC(0)):User
   /**
    * Finds an existing user
    */
-  def findById(id:UserId):Option[User]
+  def findById(userId:UserId):Option[User]
 
   /**
    * Finds by email

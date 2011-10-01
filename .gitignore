@@ -2,6 +2,8 @@
 .idea
 *.iml
 target/
+out/
 project/boot/
 project-sbt7/
 project-0.10/
+lib_managed/

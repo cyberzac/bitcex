@@ -8,28 +8,21 @@ import java.math.BigDecimal
 import org.bitcex._
 import model._
 import akka.actor.{ActorRef, TypedActor}
+import org.springframework.beans.factory.annotation.Autowired
+import userservice.UserService
 
-trait Trader {
 
-  val userService: UserService
-
-  @consume("servlet:///buy")
-  def buy(@Header("amount") amount: String, @Header("price") price: String, @Header("email") userId: String, @Header("password") password: String): String
-
-  @consume("servlet:///sell")
-  def sell(@Header("amount") amount: String, @Header("price") price: String, @Header("email") userId: String, @Header("password") password: String): String
-
-}
-
-class ServletActor extends TypedActor with Trader {
-  val matcherActor = actorOf[MatcherActor[BTC, SEK]].start
+// Todo cake pattern ?
+@Autowired
+class TraderActor(val userService:UserService) extends TypedActor with ServletTrader {
+  val matcherActor = actorOf[OrderBookActor[BTC, SEK]].start
   var userActors = Map[User, ActorRef]()
-  // Todo cake pattern or spring...
-  val userService = new InMemoryUserService()
+
+
   val log = LoggerFactory.getLogger(getClass)
   val badAuth = "wrong email/password"
 
-  log.info("Trader started at")
+  log.info("TraderActor started at")
 
 
   def buy(amountStr: String, priceStr: String, email: String, password: String): String = {

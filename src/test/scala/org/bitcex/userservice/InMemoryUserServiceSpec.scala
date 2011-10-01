@@ -1,12 +1,14 @@
-package org.bitcex.model
+package org.bitcex.userservice
 
 import org.specs.Specification
+import org.bitcex.model._
+import akka.actor.TypedActor
 
 class InMemoryUserServiceSpec extends Specification {
 
   "InMemoryUserService" should {
 
-    val dut = new InMemoryUserService()
+    val dut = TypedActor.newInstance(classOf[UserService], classOf[InMemoryUserService], 1000)
 
     "have a create users" in {
 

@@ -1,8 +1,12 @@
-package org.bitcex.model
+package org.bitcex.userservice
 
 import java.lang.IllegalArgumentException
+import org.springframework.stereotype.Component
+import org.bitcex.model._
+import akka.actor.TypedActor
 
-class InMemoryUserService extends UserService {
+@Component
+class InMemoryUserService extends TypedActor with  UserService {
   var userId = 0
   var users = Map[UserId, User]()
 
@@ -21,10 +25,10 @@ class InMemoryUserService extends UserService {
 
   def findById(id: UserId): Option[User] = users.get(id)
 
-  def create(name: String, email: String, password: String, sek: SEK, btc: BTC): User = {
-    if (findByEmail(Email(email)).isDefined) throw new IllegalArgumentException("%s is already in use".format(email))
+  def create(name: Name, email: Email, clear: String, sek: SEK = SEK(0), btc: BTC = BTC(0)): User = {
+    if (findByEmail(email).isDefined) throw new IllegalArgumentException("%s is already in use".format(email))
     userId += 1
-    val user = User(Name(name),Email(email), UserId(userId.toString), Password(password), sek, btc)
+    val user = User(name,email, userId.toString, Password(clear), sek, btc)
     users = users + (user.id -> user)
     user
   }
