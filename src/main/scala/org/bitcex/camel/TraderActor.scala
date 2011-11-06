@@ -15,7 +15,7 @@ import userservice.UserService
 // Todo cake pattern ?
 @Autowired
 class TraderActor(val userService:UserService) extends TypedActor with ServletTrader {
-  val matcherActor = actorOf[OrderBookActor[BTC, SEK]].start
+  val orderBookActor = actorOf[OrderBookActor[BTC, SEK]].start
   var userActors = Map[User, ActorRef]()
 
 
@@ -30,7 +30,7 @@ class TraderActor(val userService:UserService) extends TypedActor with ServletTr
     val price = new BigDecimal(priceStr)
     val user = getUserActor(Email(email), password).getOrElse(return badAuth)
     val order = BidOrderSEK(BTC(amount), SEK(price), user)
-    matcherActor ! order
+    orderBookActor ! order
     val reply = "Bid order created: %s" format order
     self.reply(reply)
     reply
@@ -42,7 +42,7 @@ class TraderActor(val userService:UserService) extends TypedActor with ServletTr
     val price = new BigDecimal(priceStr)
     val user = getUserActor(Email(email), password).getOrElse(return badAuth)
     val order = AskOrderSEK(BTC(amount), SEK(price), user)
-    matcherActor ! order
+    orderBookActor ! order
     val reply = "Ask order created: %s" format order
     self.reply(reply)
     reply

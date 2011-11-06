@@ -1,8 +1,10 @@
 package org.bitcex.admin
 
-import org.bitcex.model.{SEK, BTC, UserId}
+import org.bitcex.model.{User, SEK, BTC, UserId}
 
 trait UserAdmin {
+
+  def get(userId: String): Option[User]
 
   def create(name: String, email: String, password: String): UserId
 

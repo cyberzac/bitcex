@@ -7,7 +7,7 @@ trait UserService {
   /**
    * Creates a new user
    */
-  def create(name:Name, email:Email, clear:String, sek:SEK=SEK(0), btc:BTC=BTC(0)):User
+  def create(name:Name, email:Email, password:String, sek:SEK=SEK(0), btc:BTC=BTC(0)):User
   /**
    * Finds an existing user
    */

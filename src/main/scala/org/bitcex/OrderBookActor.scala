@@ -1,9 +1,9 @@
 package org.bitcex
 
 import akka.actor.Actor
-import model.{Trade, BidOrder, AskOrder, Price}
+import model.{Trade, BidOrder, AskOrder, Currency}
 
-class OrderBookActor[T <: Price[T], S <: Price[S]] extends Actor {
+class OrderBookActor[T <: Currency[T], S <: Currency[S]] extends Actor {
   val matcher = new OrderBook[T, S]()
 
   def sendTrades(trades: scala.List[Trade[T, S]]) {

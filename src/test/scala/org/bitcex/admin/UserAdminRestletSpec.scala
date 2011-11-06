@@ -4,6 +4,7 @@ import org.specs2.mutable.Specification
 import org.specs2.mock._
 import org.bitcex.userservice.UserService
 import org.bitcex.model._
+import akka.actor.TypedActor
 
 class UserAdminRestletSpec extends Specification with Mockito {
 
@@ -18,16 +19,12 @@ class UserAdminRestletSpec extends Specification with Mockito {
     val userService = mock[UserService]
     userService.create(name, email, clear) returns user
     userService.findById(userId) returns Some(user)
-    val dut = new UserAdminRestlet(userService)
+    val dut = TypedActor.newInstance(classOf[UserAdmin], new UserAdminRestlet(userService))
 
 
     "create a new user " in {
-      val createdUser = dut.create("Martin Zachrison", "mail@internet", "secret")
-      createdUser must  not  beNull
-      createdUser.name must_== name
-      createdUser.email must_== email
-      createdUser.id must_== userId
-      createdUser.password.equals(clear) must  beTrue
+      val createdUserId = dut.create("Martin Zachrison", "mail@internet", "secret")
+      createdUserId must_==  userId
     }
 
     "Add SEK to a user" in {

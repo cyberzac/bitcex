@@ -6,31 +6,28 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-       http://akka.io/schema/akka http://akka.io/akka-1.0.xsd">
+       http://akka.io/schema/akka http://akka.io/akka-1.0.xsd
+       ">
 
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+
         <package>org.bitcex</package>
         <contextScan/>
+
         <jmxAgent id="agent" disabled="false"/>
     </camelContext>
-
-    <!--supervision id="supervision-untyped-actors" xmlns="http://akka.io/schema/akka">
-        <restart-strategy failover="AllForOne" retries="3" timerange="1000">
-            <trap-exits>
-                <trap-exit>java.io.IOException</trap-exit>
-                <trap-exit>java.lang.NullPointerException</trap-exit>
-            </trap-exits>
-        </restart-strategy>
-        <untyped-actors>
-            <untyped-actor implementation="org.bitcex.camel.TradeActoror"  lifecycle="permanent"/>
-        </untyped-actors>
-    </supervision-->
 
     <camel-service xmlns="http://akka.io/schema/akka">
         <camel-context ref="camelContext"/>
     </camel-service>
 
     <bean class="org.bitcex.camel.SpringMain"/>
+
+    <bean class="org.apache.camel.impl.DefaultShutdownStrategy">
+        <property name="shutdownNowOnTimeout" value="true"/>
+        <property name="timeout" value="300"/>
+        <property name="timeUnit" value="MILLISECONDS"/>
+    </bean>
 
     <bean id="RestletComponent" class="org.restlet.Component"/>
 

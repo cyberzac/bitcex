@@ -2,7 +2,7 @@ package org.bitcex.model
 
 import org.specs.Specification
 
-class PriceSpec extends Specification {
+class CurrencySpec extends Specification {
 
   "A SEK fund " should {
 

@@ -2,7 +2,7 @@ package org.bitcex
 
 import model._
 
-class OrderBook[T <: Price[T], S <: Price[S]] {
+class OrderBook[T <: Currency[T], S <: Currency[S]] {
   var askOrders = List[AskOrder[T, S]]()
   var bidOrders = List[BidOrder[T, S]]()
 

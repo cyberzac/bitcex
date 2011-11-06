@@ -1,6 +1,6 @@
 package org.bitcex
 
-import model.{Price, Ticker, USD}
+import model.{Currency, Ticker, USD}
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.JsonAST.JValue
 import util.CurrencyConverter
@@ -24,7 +24,7 @@ object MtGoxTicker {
 }
 
   case class MtGoxTicker(high: USD, low: USD, vol: BigDecimal, bid: USD, ask: USD, last: USD) {
-    def toTicker[T <:Price[T]](converterOption:Option[CurrencyConverter[USD, T]]): Option[Ticker[T]] = {
+    def toTicker[T <:Currency[T]](converterOption:Option[CurrencyConverter[USD, T]]): Option[Ticker[T]] = {
       val converter = converterOption.getOrElse(return None)
       val lastSEK = converter.midpoint(last)
       val askSEK = converter.bid(ask)

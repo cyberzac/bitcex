@@ -2,7 +2,7 @@ package org.bitcex.model
 
 import akka.actor.ActorRef
 
-sealed abstract class Order[T <: Price[T], S <: Price[S]] {
+sealed abstract class Order[T <: Currency[T], S <: Currency[S]] {
   val amount: T
   val price: S
   val userRef: ActorRef
@@ -13,14 +13,14 @@ sealed abstract class Order[T <: Price[T], S <: Price[S]] {
 
 }
 
-abstract class AskOrder[T <: Price[T], S <: Price[S]] extends Order[T, S] {
+abstract class AskOrder[T <: Currency[T], S <: Currency[S]] extends Order[T, S] {
   val sellerRef = userRef
 
   def create(amount: T): AskOrder[T, S]
 
 }
 
-abstract class BidOrder[T <: Price[T], S <: Price[S]] extends Order[T, S] {
+abstract class BidOrder[T <: Currency[T], S <: Currency[S]] extends Order[T, S] {
   val buyerRef = userRef
 
   def create(amount: T): BidOrder[T, S]
