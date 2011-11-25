@@ -20,19 +20,11 @@ class SpringMain {
 
   val userServiceActor = TypedActor.newInstance(classOf[UserService], classOf[InMemoryUserService], 1000)
   val traderActor = TypedActor.newInstance(classOf[ServletTrader], new TraderActor(userServiceActor))
-  val tickerActor = actorOf[TickerActor]
-  val velocityActor = actorOf[VelocityActor]
-  val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))
-  val mtGoxActor = actorOf(new MtGoxTickerActor(tickerActor))
-  val mtGoxProducer = actorOf(new MtGoxTickerProducer((mtGoxActor)))
-  val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor))
-
+  val tickerActor = actorOf[TickerActor].start()
+  val velocityActor = actorOf[VelocityActor].start()
+  val indexActor = actorOf(new IndexActor(tickerActor, velocityActor)).start()
+  val mtGoxActor = actorOf(new MtGoxTickerActor(tickerActor)).start()
+  val mtGoxProducer = actorOf(new MtGoxTickerProducer((mtGoxActor))).start()
+  val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor)).start()
   val userAdmin =  TypedActor.newInstance(classOf[UserAdmin], new UserAdminRestlet(userServiceActor), 1000)
-
-  tickerActor.start()
-  velocityActor.start()
-  indexActor.start()
-  mtGoxActor.start()
-  mtGoxProducer.start()
-  ecbCurrencyActor.start()
 }
