@@ -18,7 +18,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= {
-  val akka_version = "1.1.3"
+  val akka_version = "1.2"
   Seq(
     "se.scalablesolutions.akka" % "akka-actor" % akka_version,
     "se.scalablesolutions.akka" % "akka-spring" % akka_version,

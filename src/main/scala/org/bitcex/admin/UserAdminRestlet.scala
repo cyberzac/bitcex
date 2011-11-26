@@ -3,23 +3,22 @@ package org.bitcex.admin
 import org.bitcex.userservice.UserService
 import org.bitcex.model.{User, SEK, BTC, UserId}
 import akka.actor.TypedActor
-import akka.camel.consume
 import org.slf4j.LoggerFactory
-import org.apache.camel.{Headers, Header}
+import org.apache.camel.Header
 
 class UserAdminRestlet(val userService: UserService) extends TypedActor with UserAdmin {
 
   val log = LoggerFactory.getLogger(getClass)
 
-  @consume("restlet:/admin/users/{userId}?restletMethod=GET")
-  def get(@Header("userId") userId: String): Option[User] = {
+  def get(userId: String): Option[User] = {
+    log.debug("Request for user {}", userId)
     val user = userService.findById(userId)
     log.debug("Replying to GET {}", user)
     user
   }
 
-  @consume("restlet:/admin/users?restletMethod=POST")
-  def create(@Header("name") name: String, @Header("email") email: String, @Header("password") password: String): UserId = {
+
+  def create(name: String, email: String, password: String): UserId = {
     val user = userService.create(name, email, password)
     log.debug("Created user {}", user)
     user.id

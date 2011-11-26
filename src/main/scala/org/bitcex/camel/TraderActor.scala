@@ -36,7 +36,6 @@ class TraderActor(val userService:UserService) extends TypedActor with ServletTr
     reply
   }
 
-  @consume("servlet:///sell")
   def sell(amountStr: String, priceStr: String, email: String, password: String): String = {
     val amount = new BigDecimal(amountStr)
     val price = new BigDecimal(priceStr)
