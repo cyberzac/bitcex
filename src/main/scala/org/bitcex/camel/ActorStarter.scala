@@ -9,14 +9,14 @@ import org.bitcex.admin.{UserAdmin, UserAdminRestlet}
 /**
  * To be started by the Spring context
  */
-class SpringMain {
+class ActorStarter {
 
   val log = LoggerFactory.getLogger(getClass)
 
   //Change Restlet logging from JUL to slf4j
   System.setProperty("org.restlet.engine.loggerFacadeClass","org.restlet.ext.slf4j.Slf4jLoggerFacade")
 
-  log.info("Starting bitcex (spring)")
+  log.info("Starting actors")
 
   val userServiceActor = TypedActor.newInstance(classOf[UserService], classOf[InMemoryUserService], 1000)
   val traderActor = TypedActor.newInstance(classOf[ServletTrader], new TraderActor(userServiceActor))

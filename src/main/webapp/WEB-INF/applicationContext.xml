@@ -21,7 +21,7 @@
         <camel-context ref="camelContext"/>
     </camel-service>
 
-    <bean class="org.bitcex.camel.SpringMain"/>
+    <bean class="org.bitcex.camel.ActorStarter"/>
 
     <bean class="org.apache.camel.impl.DefaultShutdownStrategy">
         <property name="shutdownNowOnTimeout" value="true"/>
