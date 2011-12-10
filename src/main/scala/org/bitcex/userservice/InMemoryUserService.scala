@@ -13,7 +13,7 @@ class InMemoryUserService extends TypedActor with UserService {
   var users = Map[UserId, User]()
 
   create(Name("zac"), Email("zac@cyberzac.se"), "pw", SEK(100), BTC(100))
-  create(Name("mats"), Email("mats@cyberzac.se"), "pw", SEK(100), BTC(100))
+  create(Name("mats"), Email("mats@henricson.se"), "pw", SEK(100), BTC(100))
 
   def remove(user: User): Boolean = false
 
@@ -29,20 +29,20 @@ class InMemoryUserService extends TypedActor with UserService {
 
   def findByEmail(email: Email): Option[User] = {
     val user = users.values.find(_.email == email)
-    log.debug("findByEmail: {}", if (user.isDefined) user else  "No user with email %s".format(email))
+    log.debug("findByEmail: {}", if (user.isDefined) user else "No user with email %s".format(email))
     user
   }
 
   def findById(id: UserId): Option[User] = {
     val user = users.get(id)
-    log.debug("findById: {}", if (user.isDefined) user else  "No user with id %s".format(id))
+    log.debug("findById: {}", if (user.isDefined) user else "No user with id %s".format(id))
     user
   }
 
   def create(name: Name, email: Email, clear: String, sek: SEK = SEK(0), btc: BTC = BTC(0)): User = {
     if (findByEmail(email).isDefined) throw new IllegalArgumentException("%s is already in use".format(email))
     userId += 1
-    val user = User(name,email, userId.toString, Password(clear), sek, btc)
+    val user = User(name, email, userId.toString, Password(clear), sek, btc)
     users = users + (user.id -> user)
     log.info("Created user {}", user)
     user

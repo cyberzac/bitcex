@@ -28,6 +28,14 @@ class OrderBookSpec extends Specification {
   val bid_11_10 = BidOrderSEK(BTC(11), SEK(10), buyerRef)
   val bid_5_11 = BidOrderSEK(BTC(5), SEK(11), buyerRef)
 
+  // Todo make generic
+  def verifyOrders(bidOrders: List[BidOrder[BTC, SEK]], bid: BidOrderSEK) {
+    bidOrders.isEmpty mustBe false
+    val actual = bidOrders.head
+    actual.amount must_== bid.amount
+    actual.price must_== bid.price
+  }
+
   "An OrderBook" should {
     "Que an AskOrder if no match is possible" in {
       val dut = new OrderBook[BTC, SEK]()
@@ -85,12 +93,12 @@ class OrderBookSpec extends Specification {
       dut.bidOrders.isEmpty mustBe true
     }
 
-    "Return a trade with average price if the ask and bid overrun each other for a bid order" in {
+    "Return a trade with the oldest price if the ask and bid overrun each other for a bid order" in {
       val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       val trade = dut.matchOrder(bid_5_11)(0)
       trade.amount must_== BTC(5)
-      trade.price must_== SEK(10)
+      trade.price must_== SEK(9)
       trade.sellerRef mustBe sellerRef
       trade.buyerRef mustBe buyerRef
     }
@@ -100,7 +108,7 @@ class OrderBookSpec extends Specification {
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       val trade = dut.matchOrder(bid_3_10)(0)
       trade.amount must_== BTC(3)
-      trade.price must_== SEK(9.5)
+      trade.price must_== SEK(9)
       trade.sellerRef mustBe sellerRef
       trade.buyerRef mustBe buyerRef
     }
@@ -116,7 +124,7 @@ class OrderBookSpec extends Specification {
       val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(bid_9_10).isEmpty mustBe true
       dut.matchOrder(ask_5_9)
-      dut.bidOrders must containInOrder(bid_4_10)
+      verifyOrders(dut.bidOrders, bid_4_10)
     }
 
     "Match multiple asks and yield several Trades for one bid order" in {
@@ -124,20 +132,20 @@ class OrderBookSpec extends Specification {
       dut.matchOrder(ask_5_9).isEmpty mustBe true
       dut.matchOrder(ask_5_10).isEmpty mustBe true
       val trades = dut.matchOrder(bid_11_10)
-      val trade1 = Trade(BTC(5), SEK(10), sellerRef, buyerRef)
-      val trade2 = Trade(BTC(5), SEK(9.5), sellerRef, buyerRef)
+      val trade1 = Trade(BTC(5), SEK(9), sellerRef, buyerRef)
+      val trade2 = Trade(BTC(5), SEK(10), sellerRef, buyerRef)
       trades must containInOrder(trade1, trade2)
       dut.askOrders.isEmpty mustBe true
-      dut.bidOrders must containInOrder(bid_1_10)
+      verifyOrders(dut.bidOrders, bid_1_10)
     }
 
-     "Match multiple bids and yield several Trades for one ask order" in {
+    "Match multiple bids and yield several Trades for one ask order" in {
       val dut = new OrderBook[BTC, SEK]()
       dut.matchOrder(bid_3_9).isEmpty mustBe true
       dut.matchOrder(bid_3_10).isEmpty mustBe true
       val trades = dut.matchOrder(ask_10_9)
       val trade1 = Trade(BTC(3), SEK(9), sellerRef, buyerRef)
-      val trade2 = Trade(BTC(3), SEK(9.5), sellerRef, buyerRef)
+      val trade2 = Trade(BTC(3), SEK(10), sellerRef, buyerRef)
       trades must containInOrder(trade1, trade2)
       dut.bidOrders.isEmpty mustBe true
       dut.askOrders must containInOrder(ask_4_9)

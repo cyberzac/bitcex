@@ -12,14 +12,14 @@ class OrderBook[T <: Currency[T], S <: Currency[S]] {
     val bidOption = bidOrders.find(_.price >= askOrder.price)
     bidOption match {
       case Some(bidOrder) => {
-        val trade = Trade(askOrder, bidOrder)
+        val trade = Trade(askOrder, bidOrder, bidOrder.price)
         removeOrder(bidOrder)
         val diff = bidOrder.amount - askOrder.amount
         diff.signum match {
-          case -1 => matchOrder(askOrder.create(-diff), trade :: trades)
+          case -1 => matchOrder(askOrder.create(-diff, askOrder.timestamp), trade :: trades)
           case 0 => trade :: trades
           case 1 => {
-            addOrder(bidOrder.create(diff))
+            addOrder(bidOrder.create(diff, bidOrder.timestamp))
             trade :: trades
           }
         }
@@ -31,25 +31,25 @@ class OrderBook[T <: Currency[T], S <: Currency[S]] {
     }
   }
 
-  def matchOrder(bidOrder: BidOrder[T, S]): List[Trade[T, S]] = matchOrder(bidOrder, List())
+  def matchOrder(bidOrder: BidOrder[T, S]): List[Trade[T, S]] = matchOrder(bidOrder, List()).reverse
 
-  def matchOrder(bidOrder: BidOrder[T, S], trades: List[Trade[T, S]]): List[Trade[T, S]] = {
-    val askOption = askOrders.find(_.price <= bidOrder.price)
-    if (askOption.isEmpty) {
+  private def matchOrder(bidOrder: BidOrder[T, S], trades: List[Trade[T, S]]): List[Trade[T, S]] = {
+    val askOptions = askOrders.filter(_.price <= bidOrder.price).sortWith((a, b) => a.timestamp.compareTo(b.timestamp) < 0)
+    if (askOptions.isEmpty) {
       addOrder(bidOrder)
       return trades
     }
-    val askOrder = askOption.get
-    val trade = Trade(askOrder, bidOrder)
+    val askOrder = askOptions.head
+    val trade = Trade(askOrder, bidOrder, askOrder.price)
     removeOrder(askOrder)
-    val diff = askOrder.amount - bidOrder.amount
-    diff.signum match {
+    val amountDiff = askOrder.amount - bidOrder.amount
+    amountDiff.signum match {
       case -1 => {
-        matchOrder(bidOrder.create(-diff), trade :: trades)
+        matchOrder(bidOrder.create(-amountDiff, bidOrder.timestamp), trade :: trades)
       }
       case 0 => trade :: trades
-      case 1 =>  {
-        addOrder(askOrder.create(diff))
+      case 1 => {
+        addOrder(askOrder.create(amountDiff, askOrder.timestamp))
         trade :: trades
       }
     }
@@ -63,11 +63,11 @@ class OrderBook[T <: Currency[T], S <: Currency[S]] {
     bidOrders = bidOrders.filterNot(_ == bid)
   }
 
-  private def addOrder(askOrder: AskOrder[T, S]): Unit = {
+  private def addOrder(askOrder: AskOrder[T, S]) {
     askOrders = (askOrder :: askOrders).sortWith((s, t) => s.price < t.price)
   }
 
-  private def addOrder(bidOrder: BidOrder[T, S]): Unit = {
+  private def addOrder(bidOrder: BidOrder[T, S]) {
     bidOrders = (bidOrder :: bidOrders).sortWith((s, t) => s.price > t.price)
   }
 
