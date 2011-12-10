@@ -14,7 +14,7 @@ class ActorStarter {
   val log = LoggerFactory.getLogger(getClass)
 
   //Change Restlet logging from JUL to slf4j
-  System.setProperty("org.restlet.engine.loggerFacadeClass","org.restlet.ext.slf4j.Slf4jLoggerFacade")
+  System.setProperty("org.restlet.engine.loggerFacadeClass", "org.restlet.ext.slf4j.Slf4jLoggerFacade")
 
   log.info("Starting actors")
 
@@ -26,5 +26,5 @@ class ActorStarter {
   val mtGoxActor = actorOf(new MtGoxTickerActor(tickerActor)).start()
   val mtGoxProducer = actorOf(new MtGoxTickerProducer((mtGoxActor))).start()
   val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor)).start()
-  val userAdmin =  TypedActor.newInstance(classOf[UserAdmin], new UserAdminRestlet(userServiceActor), 1000)
+  val userAdmin = TypedActor.newInstance(classOf[UserAdmin], new UserAdminRestlet(userServiceActor), 1000)
 }

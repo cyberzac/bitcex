@@ -2,8 +2,6 @@ package org.bitcex.camel
 
 import org.slf4j.LoggerFactory
 import akka.actor.Actor._
-import akka.camel.consume
-import org.apache.camel.Header
 import java.math.BigDecimal
 import org.bitcex._
 import model._
@@ -14,8 +12,8 @@ import userservice.UserService
 
 // Todo cake pattern ?
 @Autowired
-class TraderActor(val userService:UserService) extends TypedActor with ServletTrader {
-  val orderBookActor = actorOf[OrderBookActor[BTC, SEK]].start
+class TraderActor(val userService: UserService) extends TypedActor with ServletTrader {
+  val orderBookActor = actorOf[OrderBookActor[BTC, SEK]].start()
   var userActors = Map[User, ActorRef]()
 
 

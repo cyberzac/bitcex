@@ -13,8 +13,8 @@ class IndexActor(ticker: ActorRef, velocity: ActorRef) extends Actor with Consum
 
   val log = LoggerFactory.getLogger(getClass)
 
-//  val uri = "jetty:http://0.0.0.0:8877/"
-  def endpointUri =  "servlet:///tickers"
+  //  val uri = "jetty:http://0.0.0.0:8877/"
+  def endpointUri = "servlet:///tickers"
 
   log.info("Ticker started at {}", endpointUri)
 

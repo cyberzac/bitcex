@@ -2,7 +2,6 @@ package org.bitcex.model
 
 import akka.actor.Actor
 import org.bitcex.messages.GetUserMsg
-import org.slf4j.LoggerFactory
 import com.weiglewilczek.slf4s.Logging
 
 class UserActor(var user: User) extends Actor with Logging {
@@ -12,12 +11,12 @@ class UserActor(var user: User) extends Actor with Logging {
 
     case trade@Trade(amount: BTC, price: SEK, seller, `self`) => {
       user = user.copy(btc = user.btc + amount).copy(sek = user.sek - (price * amount.amount))
-      logger.info(user.name + " bought " + amount + " at " + price +"/BTC")
+      logger.info(user.name + " bought " + amount + " at " + price + "/BTC")
     }
 
     case trade@Trade(amount: BTC, price: SEK, `self`, buyer) => {
       user = user.copy(btc = user.btc - amount).copy(sek = user.sek + (price * amount.amount))
-      logger.info(user.name + " sold " + amount + " at " + price +"/BTC")
+      logger.info(user.name + " sold " + amount + " at " + price + "/BTC")
     }
 
     case GetUserMsg => self reply user

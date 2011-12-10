@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import org.bitcex._
 import model._
 import util.CurrencyConverter
-import akka.camel.{Consumer, Message}
+import akka.camel.Consumer
 import org.springframework.stereotype.Component
 
 @Component
@@ -37,7 +37,8 @@ class TickerActor extends Actor with Consumer {
         log.debug("Forwardning ticker to {}", receiver)
         receiver forward ticker
       } else {
-      self.reply(ticker)}
+        self.reply(ticker)
+      }
     }
 
     case msg => log.info("Ignored {}", msg)

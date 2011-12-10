@@ -13,7 +13,7 @@ import util.CurrencyConverter
 
 @Component
 @Autowired
-class EcbCurrencyActor(tickerActor:ActorRef) extends Actor with Consumer {
+class EcbCurrencyActor(tickerActor: ActorRef) extends Actor with Consumer {
   val log = LoggerFactory.getLogger(getClass)
   val currencySpread = 0.05
 
@@ -30,7 +30,7 @@ class EcbCurrencyActor(tickerActor:ActorRef) extends Actor with Consumer {
       val converter = parseMessage(update)
       tickerActor ! converter
       // Todo save as file only if the timestamp has changed by sending to a file:route
-    //  self.reply(body)
+      //  self.reply(body)
     }
 
     case msg => log.info("Ignored {}", msg)

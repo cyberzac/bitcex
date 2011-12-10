@@ -31,7 +31,7 @@ object Password {
     digester.digest(value.getBytes)
   }
 
-  def toHexString(bytes:Array[Byte]):String = bytes.map("%02X" format _).mkString
+  def toHexString(bytes: Array[Byte]): String = bytes.map("%02X" format _).mkString
 }
 
 case class Password(salt: Array[Byte], hashed: Array[Byte]) {

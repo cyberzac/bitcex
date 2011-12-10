@@ -1,42 +1,42 @@
 package org.bitcex.model
 
 sealed abstract class Currency[T] {
- // self: { def copy(amount:BigDecimal) : T } =>
- // def copy(amount:BigDecimal): T
+  // self: { def copy(amount:BigDecimal) : T } =>
+  // def copy(amount:BigDecimal): T
 
   val amount: BigDecimal
 
   def create(amount: BigDecimal): T //= this.copy(amount)
 
-  def >(price: Currency[T]):Boolean = amount > price.amount
+  def >(price: Currency[T]): Boolean = amount > price.amount
 
-  def >=(price: Currency[T]):Boolean = amount >= price.amount
+  def >=(price: Currency[T]): Boolean = amount >= price.amount
 
-  def <(price: Currency[T]):Boolean = amount < price.amount
+  def <(price: Currency[T]): Boolean = amount < price.amount
 
-  def <=(price: Currency[T]):Boolean = amount <= price.amount
+  def <=(price: Currency[T]): Boolean = amount <= price.amount
 
-  def -(price: Currency[T]):T = create(amount - price.amount)
+  def -(price: Currency[T]): T = create(amount - price.amount)
 
-  def +(price: Currency[T]):T = create(amount + price.amount)
+  def +(price: Currency[T]): T = create(amount + price.amount)
 
-  def *(factor: BigDecimal):T = create(amount * factor)
+  def *(factor: BigDecimal): T = create(amount * factor)
 
-  def *(price:Currency[T]):T = price * amount
+  def *(price: Currency[T]): T = price * amount
 
-  def /(factor: BigDecimal):T = create(amount / factor)
+  def /(factor: BigDecimal): T = create(amount / factor)
 
-  def /(price:Currency[T]):T = this / price.amount
+  def /(price: Currency[T]): T = this / price.amount
 
-  def unary_-():T = create(-amount)
+  def unary_-(): T = create(-amount)
 
-  def signum:Int = amount.signum
+  def signum: Int = amount.signum
 
-  def min(price:Currency[T]) = create(amount.min(price.amount))
+  def min(price: Currency[T]) = create(amount.min(price.amount))
 
-  def max(price:Currency[T]) = create(amount.max(price.amount))
+  def max(price: Currency[T]) = create(amount.max(price.amount))
 
-  def rounded:String = "%.2f".format(amount)
+  def rounded: String = "%.2f".format(amount)
 
 }
 

@@ -1,6 +1,5 @@
 package org.bitcex.util
 
-import org.eclipse.jetty.server.UserIdentity
 import org.bitcex.model.Currency
 
 case class CurrencyConverter[F <: Currency[F], T <: Currency[T]](from: F, to: T, spread: Double = 0.02) {
@@ -16,7 +15,7 @@ case class CurrencyConverter[F <: Currency[F], T <: Currency[T]](from: F, to: T,
 
   def inverseAsk(to: T): F = from.create(to.amount / bidRate)
 
-  def midpoint(from: F): T = to.create(from.amount *rate)
+  def midpoint(from: F): T = to.create(from.amount * rate)
 }
 
 

@@ -2,7 +2,6 @@ package org.bitcex.camel
 
 import akka.camel.consume
 import org.apache.camel.Header
-import org.bitcex._
 
 trait ServletTrader {
 

@@ -6,7 +6,7 @@ import net.liftweb.json._
 import org.slf4j.LoggerFactory
 
 class GoogleCurrencyActor extends Actor with Producer {
-    val log = LoggerFactory.getLogger(getClass)
+  val log = LoggerFactory.getLogger(getClass)
 
   val uri = "http://www.google.com/ig/calculator?hl=en&q=1USD=?SEK"
 
@@ -16,10 +16,10 @@ class GoogleCurrencyActor extends Actor with Producer {
 
   override protected def receiveAfterProduce = {
 
-    case msg:Message => {
+    case msg: Message => {
       val body = msg.bodyAs[String]
-       log.info("Received raw: {}", body)
-       val json = parse(body)
+      log.info("Received raw: {}", body)
+      val json = parse(body)
     }
   }
 }
