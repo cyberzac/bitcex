@@ -9,30 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired
 
 @Component
 @Autowired
-class IndexActor(ticker: ActorRef, velocity: ActorRef) extends Actor with Consumer {
-
+class TickerConsumerActor(ticker: ActorRef, producer: ActorRef) extends Actor with Consumer {
   val log = LoggerFactory.getLogger(getClass)
 
-  //  val uri = "jetty:http://0.0.0.0:8877/"
   def endpointUri = "servlet:///tickers"
 
   log.info("Ticker started at {}", endpointUri)
 
-
   def receive = {
     case msg: Message => {
-      ticker.forward(GetTicker(Some(velocity)))
+      ticker.forward(GetTicker(Some(producer)))
     }
     case msg => self.reply("Uh?" + msg)
   }
 }
 
 @Component
-class VelocityActor extends Actor with Producer {
-
+class TickerProducerActor extends Actor with Producer {
   val log = LoggerFactory.getLogger(getClass)
 
-  def endpointUri = "velocity:index.vm"
+  def endpointUri = "velocity:tickers.vm"
 
   override protected def receiveBeforeProduce = {
     case Some(ticker: Ticker[SEK]) => {

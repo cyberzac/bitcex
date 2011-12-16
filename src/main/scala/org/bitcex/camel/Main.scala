@@ -16,8 +16,8 @@ object Main {
 
     val buyerActor = actorOf[TraderActor]
     val tickerActor = actorOf[TickerActor]
-    val velocityActor = actorOf[VelocityActor]
-    val indexActor = actorOf(new IndexActor(tickerActor, velocityActor))
+    val tickerProducerActor = actorOf[TickerProducerActor]
+    val tickerConsumerActor = actorOf(new TickerConsumerActor(tickerActor, tickerProducerActor))
     val mtGoxActor = actorOf(new MtGoxTickerActor(tickerActor))
     val mtGoxProducer = actorOf(new MtGoxTickerProducer((mtGoxActor)))
     val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor))
@@ -26,12 +26,12 @@ object Main {
     CamelContextManager.init()
     val context = CamelContextManager.context.get
     context.addRoutes(BitcexRouteBuilder)
-    CamelContextManager.start()
+    CamelContextManager.start
 
     buyerActor.start()
     tickerActor.start()
-    velocityActor.start()
-    indexActor.start()
+    tickerProducerActor.start()
+    tickerConsumerActor.start()
     mtGoxActor.start()
     mtGoxProducer.start()
     ecbCurrencyActor.start()

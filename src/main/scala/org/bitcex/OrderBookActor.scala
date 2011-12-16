@@ -1,6 +1,7 @@
 package org.bitcex
 
 import akka.actor.Actor
+import messages.ListOrders
 import model.{Trade, BidOrder, AskOrder, Currency}
 
 class OrderBookActor[T <: Currency[T], S <: Currency[S]] extends Actor {
@@ -23,6 +24,10 @@ class OrderBookActor[T <: Currency[T], S <: Currency[S]] extends Actor {
     case bidOrder: BidOrder[T, S] => {
       val trades = matcher.matchOrder(bidOrder)
       sendTrades(trades)
+    }
+
+    case ListOrders => {
+
     }
   }
 }

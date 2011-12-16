@@ -15,11 +15,11 @@
         <th>K&ouml;p</th>
     </tr>
     <tr>
-            <!--td>SEK</td-->
-            <td>${headers.ask}</td>
-            <td>${headers.last}</td>
-            <td>${headers.bid}</td>
-        </tr>
+        <!--td>SEK</td-->
+        <td>${headers.ask}</td>
+        <td>${headers.last}</td>
+        <td>${headers.bid}</td>
+    </tr>
 
 </table>
 
