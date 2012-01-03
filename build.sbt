@@ -1,6 +1,6 @@
 organization := "org.bitcex"
 
-name := "Svenska Bitcoin"
+name := "bitcex"
 
 version := "1.0.0-SNAPSHOT"
 

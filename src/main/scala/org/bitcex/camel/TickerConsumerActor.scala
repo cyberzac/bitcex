@@ -6,6 +6,7 @@ import akka.camel.{Producer, Consumer, Message}
 import org.bitcex.model.{SEK, Ticker}
 import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Autowired
+import org.bitcex.messages.GetTicker
 
 @Component
 @Autowired

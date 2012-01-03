@@ -3,6 +3,7 @@ package org.bitcex.camel
 import akka.actor.Actor
 import org.slf4j.LoggerFactory
 import org.bitcex._
+import messages.GetTicker
 import model._
 import util.CurrencyConverter
 import akka.camel.Consumer
