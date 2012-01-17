@@ -18,13 +18,13 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= {
-  val akka_version = "1.2"
+  val akka_version = "2.0-SNAPSHOT"
   Seq(
-    "se.scalablesolutions.akka" % "akka-actor" % akka_version,
-    "se.scalablesolutions.akka" % "akka-spring" % akka_version,
-    "se.scalablesolutions.akka" % "akka-camel" % akka_version,
-    "se.scalablesolutions.akka" % "akka-camel-typed" % akka_version,
-    "se.scalablesolutions.akka" % "akka-testkit" % akka_version
+    "com.typesafe.akka" % "akka-actor" % akka_version,
+    "com.typesafe.akka" % "akka-spring" % akka_version,
+    "com.typesafe.akka" % "akka-camel" % akka_version,
+    "com.typesafe.akka" % "akka-camel-typed" % akka_version,
+    "com.typesafe.akka" % "akka-testkit" % akka_version
   )
 }
 
