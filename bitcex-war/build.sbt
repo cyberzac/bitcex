@@ -1,6 +1,4 @@
-name := "bitcex"
-
-organization := "org.bitcex"
+name := "bitcex-war"
 
 version := "1.0.0-SNAPSHOT"
 
@@ -14,6 +12,11 @@ resolvers ++= Seq(
   "typesafe" at "http://repo.typesafe.com/typesafe/releases",
   "restlet" at "http://maven.restlet.org"
 )
+
+seq(webSettings :_*)
+
+libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
+
 
 
 

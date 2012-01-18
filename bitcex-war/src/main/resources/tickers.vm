@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Svenska bitcoin</title>
+</head>
+<body>
+
+<h4>Kurser f&ouml;r bitcoin, BTC</h4>
+
+<table>
+    <tr>
+        <!--th>Vauta</th-->
+        <th>S&auml;lj</th>
+        <th>Betalt</th>
+        <th>K&ouml;p</th>
+    </tr>
+    <tr>
+        <!--td>SEK</td-->
+        <td>${headers.ask}</td>
+        <td>${headers.last}</td>
+        <td>${headers.bid}</td>
+    </tr>
+
+</table>
+
+</body>
+</html>

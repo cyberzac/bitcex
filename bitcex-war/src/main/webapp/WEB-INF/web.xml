@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
-    <display-name>Bitcoin SEK Exchange</display-name>
+    <display-name>Bitcoin Exchange</display-name>
 
     <!-- location of spring xml files -->
     <!--
