@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory
 import akka.actor.TypedActor
 import org.bitcex.userservice.{UserService, InMemoryUserService}
 import org.bitcex.admin.{UserAdmin, UserAdminRestlet}
+import org.bitcex.model.{BTC, SEK, Email, Name}
 
 /**
  * To be started by the Spring context
@@ -46,4 +47,7 @@ class ActorStarter {
   val mtGoxProducer = actorOf(new MtGoxTickerProducer((mtGoxActor))).start()
   val ecbCurrencyActor = actorOf(new EcbCurrencyActor(tickerActor)).start()
   val userAdmin = TypedActor.newInstance(classOf[UserAdmin], new UserAdminRestlet(userServiceActor), 1000)
+
+  userServiceActor.create(Name("zac"), Email("zac@cyberzac.se"), "secret", SEK(100), BTC(100))
+  userServiceActor.create(Name("mats"), Email("mats@henricson.se"), "secret", SEK(100), BTC(100))
 }

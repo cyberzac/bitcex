@@ -7,3 +7,5 @@ project/boot/
 project-sbt7/
 project-0.10/
 lib_managed/
+.history
+project.10

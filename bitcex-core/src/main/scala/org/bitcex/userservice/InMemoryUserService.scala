@@ -12,9 +12,6 @@ class InMemoryUserService extends TypedActor with UserService {
   var userId = 0
   var users = Map[UserId, User]()
 
-  create(Name("zac"), Email("zac@cyberzac.se"), "pw", SEK(100), BTC(100))
-  create(Name("mats"), Email("mats@henricson.se"), "pw", SEK(100), BTC(100))
-
   def remove(user: User): Boolean = false
 
   def update(updatedUser: User): User = {
