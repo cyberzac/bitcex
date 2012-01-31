@@ -2,15 +2,15 @@ package org.bitcex.model
 
 import akka.actor.ActorRef
 
-sealed abstract class Order[T <: Currency[T], S <: Currency[S]] {
-  val amount: T
-  val price: S
+sealed abstract class Order[A <: Currency[A], P <: Currency[P]] {
+  val amount: A
+  val price: P
   val userRef: ActorRef
   val timestamp: Long
 
-  def total: S = price * amount.amount
+  def total: P = price * amount.amount
 
-  def create(amount: T, timstamp: Long = System.currentTimeMillis()): Order[T, S]
+  def create(amount: A, timstamp: Long = System.currentTimeMillis()): Order[A, P]
 
 }
 

@@ -2,13 +2,13 @@ package org.bitcex
 
 import model._
 
-class OrderBook[T <: Currency[T], S <: Currency[S]] {
-  var askOrders = List[AskOrder[T, S]]()
-  var bidOrders = List[BidOrder[T, S]]()
+class OrderBook[A <: Currency[A], P <: Currency[P]] {
+  var askOrders = List[AskOrder[A, P]]()
+  var bidOrders = List[BidOrder[A, P]]()
 
-  def matchOrder(askOrder: AskOrder[T, S]): List[Trade[T, S]] = matchOrder(askOrder, List()).reverse
+  def matchOrder(askOrder: AskOrder[A, P]): List[Trade[A, P]] = matchOrder(askOrder, List()).reverse
 
-  def matchOrder(askOrder: AskOrder[T, S], trades: List[Trade[T, S]] = List()): List[Trade[T, S]] = {
+  def matchOrder(askOrder: AskOrder[A, P], trades: List[Trade[A, P]] = List()): List[Trade[A, P]] = {
     val bidOptions = bidOrders.filter(_.price >= askOrder.price).sortWith((a, b) => a.timestamp.compareTo(b.timestamp) < 0)
     if (bidOptions.isEmpty) {
       addOrder(askOrder)
@@ -28,9 +28,9 @@ class OrderBook[T <: Currency[T], S <: Currency[S]] {
     }
   }
 
-  def matchOrder(bidOrder: BidOrder[T, S]): List[Trade[T, S]] = matchOrder(bidOrder, List()).reverse
+  def matchOrder(bidOrder: BidOrder[A, P]): List[Trade[A, P]] = matchOrder(bidOrder, List()).reverse
 
-  private def matchOrder(bidOrder: BidOrder[T, S], trades: List[Trade[T, S]]): List[Trade[T, S]] = {
+  private def matchOrder(bidOrder: BidOrder[A, P], trades: List[Trade[A, P]]): List[Trade[A, P]] = {
     val askOptions = askOrders.filter(_.price <= bidOrder.price).sortWith((a, b) => a.timestamp.compareTo(b.timestamp) < 0)
     if (askOptions.isEmpty) {
       addOrder(bidOrder)
@@ -52,19 +52,19 @@ class OrderBook[T <: Currency[T], S <: Currency[S]] {
     }
   }
 
-  def removeOrder(ask: AskOrder[T, S]) {
+  def removeOrder(ask: AskOrder[A, P]) {
     askOrders = askOrders.filterNot(_ == ask)
   }
 
-  def removeOrder(bid: BidOrder[T, S]) {
+  def removeOrder(bid: BidOrder[A, P]) {
     bidOrders = bidOrders.filterNot(_ == bid)
   }
 
-  private def addOrder(askOrder: AskOrder[T, S]) {
+  private def addOrder(askOrder: AskOrder[A, P]) {
     askOrders = (askOrder :: askOrders).sortWith((s, t) => s.price < t.price)
   }
 
-  private def addOrder(bidOrder: BidOrder[T, S]) {
+  private def addOrder(bidOrder: BidOrder[A, P]) {
     bidOrders = (bidOrder :: bidOrders).sortWith((s, t) => s.price > t.price)
   }
 
