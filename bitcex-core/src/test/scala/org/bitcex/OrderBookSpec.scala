@@ -1,17 +1,20 @@
 package org.bitcex
 
-import model._
 import org.specs.Specification
 import akka.actor.Actor._
 import akka.actor.ActorRef
+import org.specs.mock.Mockito
+import userservice.UserService
 
-class OrderBookSpec extends Specification {
+class OrderBookSpec extends Specification with Mockito {
+
+  val userService = mock[UserService]
 
   val seller = User("Seller", "mail", "1", "pw")
-  val sellerRef = actorOf(new UserActor(buyer))
+  val sellerRef = actorOf(new UserActor(buyer, userService))
 
   val buyer = User("Buyer", "mail", "2", "pw")
-  val buyerRef = actorOf(new UserActor(buyer))
+  val buyerRef = actorOf(new UserActor(buyer, userService))
 
   "An OrderBook" should {
     "Que an AskOrder if no match is possible" in {

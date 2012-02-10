@@ -20,17 +20,19 @@
 package org.bitcex
 
 import messages.{Orders, ListOrders}
-import model._
 import org.specs2.mutable.Specification
 import akka.actor.Actor._
 import akka.testkit.TestKit
 import akka.util.Duration
 import java.util.concurrent.TimeUnit
 import org.specs2.execute.Success
+import org.specs2.mock.Mockito
+import userservice.UserService
 
 
-class OrderBookActorSpec extends Specification {
+class OrderBookActorSpec extends Specification with Mockito {
 
+  val userService = mock[UserService]
 
   class Inner extends TestKit {
     val orderBook = actorOf[OrderBookActor[BTC, SEK]]
@@ -58,11 +60,11 @@ class OrderBookActorSpec extends Specification {
   }
 
   val user = User("Nisse", "mail", "1", "pw")
-  val userRef = actorOf(new UserActor(user))
+  val userRef = actorOf(new UserActor(user, userService))
   val askOrderSEK_10_5 = AskOrderSEK(BTC(10), SEK(5), userRef)
   val askOrderSEK_10_6 = AskOrderSEK(BTC(10), SEK(6), userRef)
   val bertil = User("Bertil", "bmail", "2", "pw")
-  val bertilRef = actorOf(new UserActor(bertil))
+  val bertilRef = actorOf(new UserActor(bertil, userService))
   val bidOrderSEK_9_4_bertil = BidOrderSEK(BTC(9), SEK(4), bertilRef)
 
   "An OrderBookActor" should {

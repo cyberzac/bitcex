@@ -3,8 +3,6 @@ package org.bitcex.camel
 import org.slf4j.LoggerFactory
 import akka.actor.Actor._
 import java.math.BigDecimal
-import org.bitcex._
-import model._
 import akka.actor.{ActorRef, TypedActor}
 import org.springframework.beans.factory.annotation.Autowired
 import userservice.UserService
@@ -54,7 +52,7 @@ class TraderActor(val userService: UserService) extends TypedActor with ServletT
     if (userRef.isDefined) {
       return userRef
     }
-    val actorRef = actorOf(new UserActor(user))
+    val actorRef = actorOf(new UserActor(user, userService))
     userActors = userActors + (user -> actorRef)
     Some(actorRef)
   }
