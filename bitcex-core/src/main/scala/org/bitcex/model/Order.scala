@@ -1,6 +1,7 @@
 package org.bitcex.model
 
 import akka.actor.ActorRef
+import org.joda.time.DateTime
 
 sealed abstract class Order[A <: Currency[A], P <: Currency[P]] {
   val amount: A
@@ -11,6 +12,8 @@ sealed abstract class Order[A <: Currency[A], P <: Currency[P]] {
   def total: P = price * amount.amount
 
   def create(amount: A, timstamp: Long = System.currentTimeMillis()): Order[A, P]
+
+  def dateTime:DateTime = new DateTime(timestamp)
 
 }
 

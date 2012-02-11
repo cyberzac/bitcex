@@ -20,6 +20,7 @@
 package org.bitcex
 
 import messages.{Orders, ListOrders}
+import model._
 import org.specs2.mutable.Specification
 import akka.actor.Actor._
 import akka.testkit.TestKit

@@ -40,7 +40,8 @@ libraryDependencies ++= {
   //  val unfiltered_version = "0.4.1"
   val dispatch_version = "0.8.5"
   Seq(
-    "joda-time" % "joda-time" % "1.6.1",
+    "joda-time" % "joda-time" % "2.0",
+    "org.joda" % "joda-convert" % "1.2",
     "net.liftweb" %% "lift-json" % liftVersion,
     "saxon" % "saxon-dom" % "9.1.0.8j",
     "org.scala-tools.testing" % "specs_2.8.1" % "1.6.7" % "test",

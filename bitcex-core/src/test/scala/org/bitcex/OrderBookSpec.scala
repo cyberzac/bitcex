@@ -1,5 +1,6 @@
 package org.bitcex
 
+import model._
 import org.specs.Specification
 import akka.actor.Actor._
 import akka.actor.ActorRef

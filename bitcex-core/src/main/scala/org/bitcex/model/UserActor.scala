@@ -10,6 +10,9 @@ class UserActor(var user: User, val userService:UserService) extends Actor with 
 
   def receive: Receive = {
 
+    case trade@Trade(amount: BTC, price: SEK, `self`, `self`) => {
+      logger.info("Ignoring trade with myself "+trade)
+    }
     case trade@Trade(amount: BTC, price: SEK, seller, `self`) => {
       user = user.copy(btc = user.btc + amount).copy(sek = user.sek - (price * amount.amount))
       userService.update(user);

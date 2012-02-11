@@ -37,7 +37,7 @@ class EcbCurrencyActor(tickerActor: ActorRef) extends Actor with Consumer {
   }
 
   def parseMessage(update: Elem): CurrencyConverter[USD, SEK] = {
-    val ts = new DateMidnight(update \ "@timestamp" text)
+  //  val ts = new DateMidnight(update \ "@timestamp" text)
     val usd = USD(BigDecimal(update \ "USD" text))
     val sek = SEK(BigDecimal(update \ "SEK" text))
     CurrencyConverter(usd, sek, currencySpread)

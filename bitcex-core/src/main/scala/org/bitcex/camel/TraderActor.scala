@@ -5,7 +5,9 @@ import akka.actor.Actor._
 import java.math.BigDecimal
 import akka.actor.{ActorRef, TypedActor}
 import org.springframework.beans.factory.annotation.Autowired
-import userservice.UserService
+import org.bitcex.userservice.UserService
+import org.bitcex.OrderBookActor
+import org.bitcex.model._
 
 
 // Todo cake pattern ?
